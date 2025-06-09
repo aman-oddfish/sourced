@@ -225,7 +225,6 @@ export default function Home() {
 
             {/* Shared Header with sticky behavior */}
             <SharedHeader 
-              enableSticky={true}
               onChatOpen={openChat}
               isLoaded={isLoaded}
             />
