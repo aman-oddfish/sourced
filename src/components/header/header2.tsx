@@ -4,42 +4,63 @@ import React from "react";
 
 export default function Header2() {
   return (
-    <header className="bg-black text-white w-full">
-      <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center">
+    <header className="w-full absolute top-0 z-50">
+      <div className="max-w-screen-xl mx-auto px-6 py-6 flex items-center justify-between">
         {/* Left Logo */}
-        <div className="mr-8">
-          {/* Placeholder for your stylized "n" or other logo */}
-          {/* You can replace this with an actual SVG or Image */}
+        <div className="flex items-center">
           <svg
             width="40"
             height="40"
             viewBox="0 0 100 100"
-            fill="currentColor"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            className="text-black"
           >
-            <path d="M50 0C22.387 0 0 22.387 0 50s22.387 50 50 50 50-22.387 50-50S77.613 0 50 0zm0 92C27.386 92 8 72.614 8 50S27.386 8 50 8s42 19.386 42 42-19.386 42-42 42z" />
+            <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="6" fill="white"/>
             <text
               x="50%"
-              y="54%"
+              y="58%"
               textAnchor="middle"
               alignmentBaseline="middle"
-              fontSize="55"
+              fontSize="45"
               fontWeight="bold"
-              fill="white"
-              fontFamily="sans-serif"
+              fill="black"
+              fontFamily="serif"
             >
-              N
+              ()
             </text>
           </svg>
         </div>
 
-        {/* Nav Items */}
-        <nav className="text-2xl font-bold flex items-center space-x-3">
-          <span className="text-gray-500">BIO,</span>
-          <span className="text-gray-500">WORKS(8),</span>
-          <span className="text-white">GALLERY,</span>
-          <span className="text-gray-500">CONTACT</span>
-        </nav>
+        {/* Right Nav Items and Icon */}
+        <div className="flex items-center space-x-4">
+          {/* Nav Items with opaque backgrounds */}
+          <nav className="flex items-center space-x-3">
+            <span className="bg-white/90 backdrop-blur-sm text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors cursor-pointer">
+              HOW IT WORKS
+            </span>
+            <span className="bg-white/90 backdrop-blur-sm text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors cursor-pointer">
+              COMPANY
+            </span>
+          </nav>
+          
+          {/* Headphone Icon */}
+          <div className="ml-2">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="text-black"
+            >
+              <path
+                d="M12 1C7.03 1 3 5.03 3 10v4c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-2c0-1.1-.9-2-2-2H5c0-3.87 3.13-7 7-7s7 3.13 7 7h-2c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-4c0-4.97-4.03-9-9-9z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </div>
       </div>
     </header>
   );
