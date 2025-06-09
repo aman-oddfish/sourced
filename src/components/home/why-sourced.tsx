@@ -1,23 +1,44 @@
 "use client";
 
 import React from "react";
-import { Users, FileText, Calendar, CreditCard, ChevronDown } from "lucide-react";
+import { Users, FileText, Calendar, CreditCard } from "lucide-react";
 import SignupFlow from "@/components/signup/SignupFlow";
+import { useContentManager } from '@/hooks/useContentManager';
 
 const WhySourcedSection = () => {
+  // Use content management system
+  const {
+    whySourcedBadge,
+    whySourcedTitle,
+    talentAccordionTitle,
+    talentAccordionDescription,
+    jobAccordionTitle,
+    jobAccordionDescription,
+    isLoading: contentLoading
+  } = useContentManager();
+
+  if (contentLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <section className="py-16 md:py-24 px-4 md:px-12 ">
       <div className="max-w-5xl mx-auto">
         {/* Section Header */}
         <div className="mb-12">
           <div className="inline-block bg-gray-100 px-4 py-2 rounded-full mb-4">
-            <span className="text-sm font-medium">WHY SOURCED?</span>
+            <span className="text-sm font-medium">{whySourcedBadge}</span>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
             <h2 className="text-4xl md:text-6xl font-bold md:mb-0 mb-6">
-              How We Make Creative<br />
-              Collaborations Simple
+              {whySourcedTitle.split(' ').map((word, index, array) => (
+                <React.Fragment key={index}>
+                  {word}
+                  {index === Math.floor(array.length / 2) - 1 && <br />}
+                  {index < array.length - 1 && index !== Math.floor(array.length / 2) - 1 && ' '}
+                </React.Fragment>
+              ))}
             </h2>
             
             <div className="flex-shrink-0">
@@ -37,7 +58,7 @@ const WhySourcedSection = () => {
               <summary className="flex items-center justify-between cursor-pointer list-none">
                 <div className="flex items-center">
                   <Users className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-xl md:text-2xl font-semibold">Find and Shortlist Talent</span>
+                  <span className="text-xl md:text-2xl font-semibold">{talentAccordionTitle}</span>
                 </div>
                 {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
                 <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
@@ -45,9 +66,7 @@ const WhySourcedSection = () => {
               </summary>
               <div className="  pt-4 text-base">
                 <p className="text-gray-600 pl-[50px] md:pl-[300px]   text-xl md:text-2xl font-thin">
-                  Discover a curated network of top creative professionals. Browse portfolios, 
-                  filter by specialization, and easily shortlist the perfect collaborators 
-                  for your project needs.
+                  {talentAccordionDescription}
                 </p>
               </div>
             </details>
@@ -59,15 +78,14 @@ const WhySourcedSection = () => {
               <summary className="flex items-center justify-between cursor-pointer list-none">
                 <div className="flex items-center">
                   <FileText className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-xl md:text-2xl font-semibold">Post Your Job in Minutes</span>
+                  <span className="text-xl md:text-2xl font-semibold">{jobAccordionTitle}</span>
                 </div>
                 {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
                 <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
               </summary>
               <div className=" pt-4 text-base">
                       <p className="text-gray-600 pl-[50px] md:pl-[300px]   text-xl md:text-2xl font-thin">
-                  Create detailed job postings in just a few clicks. Specify your project requirements, 
-                  timeline, and budget, then share it with our network of talented professionals.
+                  {jobAccordionDescription}
                 </p>
               </div>
             </details>

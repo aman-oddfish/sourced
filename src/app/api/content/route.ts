@@ -1,0 +1,227 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+// In a real application, this would connect to a database
+// For now, we'll use a simple file-based storage or environment variables
+
+export async function GET() {
+  try {
+    // In production, fetch from database
+    // For now, return default content structure
+    const defaultContent = {
+      hero: [
+        {
+          id: 'hero-title',
+          title: 'Hero Title',
+          type: 'text',
+          value: 'Manage. Book. Create.',
+          placeholder: 'Enter hero title'
+        },
+        {
+          id: 'hero-subtitle',
+          title: 'Hero Subtitle',
+          type: 'text',
+          value: 'Sourced simplifies creative connections',
+          placeholder: 'Enter hero subtitle'
+        },
+        {
+          id: 'hero-image',
+          title: 'Hero Background Image',
+          type: 'image',
+          value: '/image.png',
+          placeholder: 'Upload hero image'
+        },
+        {
+          id: 'morphing-texts',
+          title: 'Morphing Text Options',
+          type: 'array',
+          value: [
+            'Photographer', 'Videographer', 'VEHICLE OWNER', 'MODEL', 
+            'INFLUENCER', 'ACTOR', 'STYLIST', 'HAIR STYLIST', 
+            'MAKEUP ARTIST', 'EQUIPTMENT', 'LOCATION', 'OTHER'
+          ]
+        },
+        {
+          id: 'launching-text',
+          title: 'Launching Text',
+          type: 'text',
+          value: 'Launching Soon.',
+          placeholder: 'Enter launching text'
+        }
+      ],
+      navigation: [
+        {
+          id: 'brand-name',
+          title: 'Brand Name',
+          type: 'text',
+          value: 'SOURCED',
+          placeholder: 'Enter brand name'
+        },
+        {
+          id: 'how-it-works-items',
+          title: 'How It Works Menu Items',
+          type: 'array',
+          value: ['For Talent', 'For Agents', 'Pricing', 'Security']
+        },
+        {
+          id: 'company-items',
+          title: 'Company Menu Items',
+          type: 'array',
+          value: ['About', 'Information', 'Team', 'Careers']
+        }
+      ],
+      footer: [
+        {
+          id: 'subscription-title',
+          title: 'Subscription Title',
+          type: 'text',
+          value: 'SUBSCRIBE FOR FIRST ACCESS',
+          placeholder: 'Enter subscription title'
+        },
+        {
+          id: 'subscription-subtitle',
+          title: 'Subscription Subtitle',
+          type: 'text',
+          value: 'NO SALES OR SPAM',
+          placeholder: 'Enter subscription subtitle'
+        },
+        {
+          id: 'copyright-text',
+          title: 'Copyright Text',
+          type: 'text',
+          value: '© Sourced. 2025 All rights reserved.',
+          placeholder: 'Enter copyright text'
+        },
+        {
+          id: 'instagram-icon',
+          title: 'Instagram Icon',
+          type: 'image',
+          value: '/insta.png',
+          placeholder: 'Upload Instagram icon'
+        },
+        {
+          id: 'linkedin-icon',
+          title: 'LinkedIn Icon',
+          type: 'image',
+          value: '/linkdin.png',
+          placeholder: 'Upload LinkedIn icon'
+        }
+      ],
+      general: [
+        {
+          id: 'site-title',
+          title: 'Site Title',
+          type: 'text',
+          value: 'Sourced - Creative Network',
+          placeholder: 'Enter site title'
+        },
+        {
+          id: 'meta-description',
+          title: 'Meta Description',
+          type: 'textarea',
+          value: 'Sourced simplifies creative connections. Find and hire top photographers, videographers, models, and more.',
+          placeholder: 'Enter meta description',
+          maxLength: 160
+        }
+      ],
+      whySourced: [
+        {
+          id: 'why-sourced-badge',
+          title: 'Section Badge Text',
+          type: 'text',
+          value: 'WHY SOURCED?',
+          placeholder: 'Enter badge text'
+        },
+        {
+          id: 'why-sourced-title',
+          title: 'Section Title',
+          type: 'text',
+          value: 'How We Make Creative Collaborations Simple',
+          placeholder: 'Enter section title'
+        },
+        {
+          id: 'talent-accordion-title',
+          title: 'Find Talent - Title',
+          type: 'text',
+          value: 'Find and Shortlist Talent',
+          placeholder: 'Enter accordion title'
+        },
+        {
+          id: 'talent-accordion-description',
+          title: 'Find Talent - Description',
+          type: 'textarea',
+          value: 'Discover a curated network of top creative professionals. Browse portfolios, filter by specialization, and easily shortlist the perfect collaborators for your project needs.',
+          placeholder: 'Enter accordion description'
+        },
+        {
+          id: 'job-accordion-title',
+          title: 'Post Job - Title',
+          type: 'text',
+          value: 'Post Your Job in Minutes',
+          placeholder: 'Enter accordion title'
+        },
+        {
+          id: 'job-accordion-description',
+          title: 'Post Job - Description',
+          type: 'textarea',
+          value: 'Create detailed job postings in just a few clicks. Specify your project requirements, timeline, and budget, then share it with our network of talented professionals.',
+          placeholder: 'Enter accordion description'
+        }
+      ]
+    };
+
+    return NextResponse.json(defaultContent);
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to fetch content' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const content = await request.json();
+    
+    // In production, save to database
+    // For now, we'll just validate the structure
+    if (!content || typeof content !== 'object') {
+      return NextResponse.json(
+        { error: 'Invalid content structure' },
+        { status: 400 }
+      );
+    }
+
+    // Here you would save to your database
+    // await saveContentToDatabase(content);
+
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Content updated successfully' 
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to update content' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  // Handle partial updates
+  try {
+    const updates = await request.json();
+    
+    // In production, merge with existing content in database
+    // For now, just return success
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Content updated successfully' 
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to update content' },
+      { status: 500 }
+    );
+  }
+} 

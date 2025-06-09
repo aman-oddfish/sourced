@@ -42,6 +42,8 @@ import {
 } from "@/components/ui/drawer"
 import SignupFlow from '../signup/SignupFlow';
 import React, { lazy, Suspense } from 'react';
+import { useContentManager } from '@/hooks/useContentManager';
+
 // Import the WhySourcedSection component lazily
 const WhySourcedSection = lazy(() => import('./why-sourced').then(mod => ({ default: mod.WhySourcedSection })));
 
@@ -101,6 +103,19 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showStickyHeader, setShowStickyHeader] = useState(false);
+  
+  // Use content management system
+  const {
+    heroTitle,
+    heroSubtitle,
+    heroImage,
+    morphingTexts,
+    launchingText,
+    brandName,
+    howItWorksItems,
+    companyItems,
+    isLoading: contentLoading
+  } = useContentManager();
 
   const handleShare = async (platform: string) => {
     const shareUrl = window.location.href;
@@ -228,7 +243,7 @@ export default function Home() {
                
              >
                <h1 className="text-2xl md:text-3xl font-semibold tracking-wide uppercase">
-                 SOURCED
+                 {brandName}
                </h1>
                
                
@@ -247,18 +262,11 @@ export default function Home() {
                      <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
                        <div className="max-w-screen mx-auto">
                          <div className="w-full flex flex-col">
-                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             For Talent
-                           </a>
-                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             For Agents
-                           </a>
-                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Pricing
-                           </a>
-                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Security
-                           </a>
+                           {howItWorksItems.map((item, index) => (
+                             <a key={index} href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                               {item}
+                             </a>
+                           ))}
                          </div>
                        </div>
                      </div>
@@ -275,18 +283,11 @@ export default function Home() {
                      <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
                        <div className="max-w-screen mx-auto">
                          <div className="w-full flex flex-col">
-                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             About
-                           </a>
-                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Information
-                           </a>
-                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Team
-                           </a>
-                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Careers
-                           </a>
+                           {companyItems.map((item, index) => (
+                             <a key={index} href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                               {item}
+                             </a>
+                           ))}
                          </div>
                        </div>
                      </div>
@@ -378,18 +379,11 @@ export default function Home() {
                      <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
                        <div className="max-w-screen mx-auto">
                          <div className="w-full flex flex-col">
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             For Talent
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             For Agents
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Pricing
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Security
-                           </a>
+                           {howItWorksItems.map((item, index) => (
+                             <a key={index} href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                               {item}
+                             </a>
+                           ))}
                          </div>
                        </div>
                      </div>
@@ -406,18 +400,11 @@ export default function Home() {
                      <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
                        <div className="max-w-screen mx-auto">
                          <div className="w-full flex flex-col">
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             About
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Information
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Team
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Careers
-                           </a>
+                           {companyItems.map((item, index) => (
+                             <a key={index} href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                               {item}
+                             </a>
+                           ))}
                          </div>
                        </div>
                      </div>
@@ -486,7 +473,7 @@ export default function Home() {
               {/* Background Image */}
               <div className="absolute inset-0 w-full h-[80vh] md:h-screen">
                 <Image
-                  src="/image.png"
+                  src={heroImage}
                   alt="Creative Network"
                   fill
                   style={{ objectFit: "cover" }}
@@ -499,31 +486,20 @@ export default function Home() {
                   defaultVelocity={0.8}
                   className={`absolute bottom-20 text-2xl text-[#c0c0c0] tracking-normal font-thin italic ${GarmondI.className}`}
                 >
-                  Launching Soon.
+                  {launchingText}
                 </VelocityScroll>
               </div>
               {/* Hero Content */}
               <div className="relative z-10">
                 <h2 className="text-3xl md:text-6xl font-bold leading-tight tracking-wide text-white uppercase text-center">
-                Manage. Book. Create.
+                  {heroTitle}
                 </h2>
                 <MorphingText
                   className='text-center uppercase tracking-wide text-white'
-                  texts={["Photographer",
-                          "Videographer",
-                          "VEHICLE OWNER",
-                          "MODEL",
-                          "INFLUENCER",
-                          "ACTOR",
-                          "STYLIST",
-                          "HAIR STYLIST",
-                          "MAKEUP ARTIST",
-                          "EQUIPTMENT",
-                          "LOCATION",
-                          "OTHER"]}
+                  texts={morphingTexts}
                 />
                 <p className={`text-lg md:text-xl text-gray-500 -translate-y-5 ${GarmondI.className}`}>
-                Sourced simplifies creative connections
+                  {heroSubtitle}
                 </p>
                 {/* CTA Buttons */}
                 <div className="flex items-center justify-center mt-8">

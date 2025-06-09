@@ -4,6 +4,7 @@ import { ArrowUpRight, PlusCircle } from "lucide-react";
 import { motion, useAnimation, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Script from 'next/script';
+import { useContentManager } from '@/hooks/useContentManager';
 
 // Declare Tawk_API on window object
 declare global {
@@ -57,6 +58,16 @@ export const Footer: FC = () => {
     threshold: 0.3,
   });
 
+  // Use content management system
+  const {
+    subscriptionTitle,
+    subscriptionSubtitle,
+    copyrightText,
+    instagramIcon,
+    linkedinIcon,
+    brandName
+  } = useContentManager();
+
   useEffect(() => {
     if (inView) {
       controls.start("visible");
@@ -64,7 +75,7 @@ export const Footer: FC = () => {
   }, [controls, inView]);
 
   // Split the text "Sourced" into letters for individual animation
-  const logoText = "SOURCED";
+  const logoText = brandName || "SOURCED";
   const logoLetters = logoText.split("");
 
   return (
@@ -72,8 +83,8 @@ export const Footer: FC = () => {
       <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between gap-12">
         {/* LEFT: Subscription Box */}
         <div className="flex-1 p-8 rounded-3xl bg-gray-100 flex flex-col items-start justify-center">
-          <h3 className="text-xl font-bold">SUBSCRIBE FOR FIRST ACCESS</h3>
-          <p className="text-base mt-2 mb-6 text-black/80">NO SALES OR SPAM</p>
+          <h3 className="text-xl font-bold">{subscriptionTitle}</h3>
+          <p className="text-base mt-2 mb-6 text-black/80">{subscriptionSubtitle}</p>
 
           {/* Email + Subscribe */}
           <div className="flex flex-col sm:flex-row gap-4 w-full">
@@ -229,17 +240,17 @@ export const Footer: FC = () => {
       <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center text-base text-gray-500
       border-t border-black
       py-6 gap-6">
-        <div>© Sourced. 2025 All rights reserved.</div>
+        <div>{copyrightText}</div>
         <div className="flex space-x-6">
           <a href="#" className="hover:text-black transition-colors">Terms & Conditions</a>
           <a href="#" className="hover:text-black transition-colors">Privacy Policy</a>
         </div>
         <div className="flex space-x-4">
       <a href="#" aria-label="Instagram" className="hover:opacity-75">
-        <img src=" /insta.png" alt="Instagram" className="h-6 w-6" />
+        <img src={instagramIcon} alt="Instagram" className="h-6 w-6" />
       </a>
       <a href="#" aria-label="LinkedIn" className="hover:opacity-75">
-        <img src=" /linkdin.png" alt="LinkedIn" className="h-6 w-6" />
+        <img src={linkedinIcon} alt="LinkedIn" className="h-6 w-6" />
       </a>
     </div>
       </div>
