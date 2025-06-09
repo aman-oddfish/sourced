@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Upload, Eye, EyeOff, Settings, Home, Users, FileText, Image as ImageIcon, Lock, Unlock } from 'lucide-react';
+import { Save, Upload, Eye, EyeOff, Settings, Home, Users, FileText, Image as ImageIcon, Lock, Unlock, Plus, Trash2 } from 'lucide-react';
 
 // Types for content management
 interface ContentSection {
   id: string;
   title: string;
-  type: 'text' | 'textarea' | 'image' | 'array';
+  type: 'text' | 'textarea' | 'image' | 'array' | 'accordion';
   value: string | string[];
   placeholder?: string;
   maxLength?: number;
@@ -158,32 +158,13 @@ export default function AdminDashboard() {
         placeholder: 'Enter section title'
       },
       {
-        id: 'talent-accordion-title',
-        title: 'Find Talent - Title',
-        type: 'text',
-        value: 'Find and Shortlist Talent',
-        placeholder: 'Enter accordion title'
-      },
-      {
-        id: 'talent-accordion-description',
-        title: 'Find Talent - Description',
-        type: 'textarea',
-        value: 'Discover a curated network of top creative professionals. Browse portfolios, filter by specialization, and easily shortlist the perfect collaborators for your project needs.',
-        placeholder: 'Enter accordion description'
-      },
-      {
-        id: 'job-accordion-title',
-        title: 'Post Job - Title',
-        type: 'text',
-        value: 'Post Your Job in Minutes',
-        placeholder: 'Enter accordion title'
-      },
-      {
-        id: 'job-accordion-description',
-        title: 'Post Job - Description',
-        type: 'textarea',
-        value: 'Create detailed job postings in just a few clicks. Specify your project requirements, timeline, and budget, then share it with our network of talented professionals.',
-        placeholder: 'Enter accordion description'
+        id: 'accordion-items',
+        title: 'Accordion Items',
+        type: 'accordion',
+        value: [
+          'Find and Shortlist Talent|Discover a curated network of top creative professionals. Browse portfolios, filter by specialization, and easily shortlist the perfect collaborators for your project needs.|Users',
+          'Post Your Job in Minutes|Create detailed job postings in just a few clicks. Specify your project requirements, timeline, and budget, then share it with our network of talented professionals.|FileText'
+        ]
       }
     ]
   });
@@ -400,6 +381,93 @@ export default function AdminDashboard() {
               placeholder="Or enter image URL"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
             />
+          </div>
+        );
+      
+      case 'accordion':
+        return (
+          <div className="space-y-4">
+            {(section.value as string[]).map((item, index) => {
+              const [title, description, icon] = item.split('|');
+              return (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium text-gray-900">Accordion Item {index + 1}</h4>
+                    <button
+                      onClick={() => removeArrayItem(sectionKey, section.id, index)}
+                      className="p-1 text-red-600 hover:bg-red-50 rounded"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                      <input
+                        type="text"
+                        value={title || ''}
+                        onChange={(e) => {
+                          const newValue = `${e.target.value}|${description || ''}|${icon || 'Users'}`;
+                          handleArrayItemChange(sectionKey, section.id, index, newValue);
+                        }}
+                        placeholder="Enter accordion title"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                      <textarea
+                        value={description || ''}
+                        onChange={(e) => {
+                          const newValue = `${title || ''}|${e.target.value}|${icon || 'Users'}`;
+                          handleArrayItemChange(sectionKey, section.id, index, newValue);
+                        }}
+                        placeholder="Enter accordion description"
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+                      <select
+                        value={icon || 'Users'}
+                        onChange={(e) => {
+                          const newValue = `${title || ''}|${description || ''}|${e.target.value}`;
+                          handleArrayItemChange(sectionKey, section.id, index, newValue);
+                        }}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      >
+                        <option value="Users">Users (People)</option>
+                        <option value="FileText">FileText (Document)</option>
+                        <option value="Calendar">Calendar</option>
+                        <option value="CreditCard">CreditCard (Payment)</option>
+                        <option value="Settings">Settings</option>
+                        <option value="Image">Image</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            
+            <button
+              onClick={() => {
+                const newAccordion = 'New Accordion Title|Enter description here|Users';
+                addArrayItem(sectionKey, section.id);
+                // Update the last item with the template
+                const currentItems = section.value as string[];
+                const newItems = [...currentItems];
+                newItems[newItems.length - 1] = newAccordion;
+                handleContentChange(sectionKey, section.id, newItems);
+              }}
+              className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-gray-400 hover:text-gray-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add New Accordion Item
+            </button>
           </div>
         );
       

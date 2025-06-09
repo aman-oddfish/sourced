@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Users, FileText, Calendar, CreditCard } from "lucide-react";
+import { Users, FileText, Calendar, CreditCard, Settings, Image as ImageIcon } from "lucide-react";
 import SignupFlow from "@/components/signup/SignupFlow";
 import { useContentManager } from '@/hooks/useContentManager';
 
@@ -10,16 +10,39 @@ const WhySourcedSection = () => {
   const {
     whySourcedBadge,
     whySourcedTitle,
-    talentAccordionTitle,
-    talentAccordionDescription,
-    jobAccordionTitle,
-    jobAccordionDescription,
+    accordionItems,
     isLoading: contentLoading
   } = useContentManager();
 
   if (contentLoading) {
     return <div>Loading...</div>;
   }
+
+  // Icon mapping
+  const getIcon = (iconName: string) => {
+    const iconMap = {
+      Users,
+      FileText,
+      Calendar,
+      CreditCard,
+      Settings,
+      Image: ImageIcon
+    };
+    const IconComponent = iconMap[iconName as keyof typeof iconMap] || Users;
+    return <IconComponent className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />;
+  };
+
+  // Parse accordion items
+  const parsedAccordions = accordionItems.map((item, index) => {
+    const [title, description, icon] = item.split('|');
+    return {
+      id: index,
+      title: title || 'Untitled',
+      description: description || 'No description',
+      icon: icon || 'Users',
+      isOpen: index === 0 // First item open by default
+    };
+  });
 
   return (
     <section className="py-16 md:py-24 px-4 md:px-12 ">
@@ -47,50 +70,34 @@ const WhySourcedSection = () => {
           </div>
         </div>
 
-        {/* Horizontal Line */}
-        {/* <div className="w-full h-px bg-gray-200 mb-6"></div> */}
-        
-        {/* Simple Accordion Sections */}
-        <div className="w-full">
-          {/* Talent Accordion Item */}
-          <div className="   p-4 pr-10 rounded-3xl bg-gray-100">
-            <details className="group" open>
-              <summary className="flex items-center justify-between cursor-pointer list-none">
-                <div className="flex items-center">
-                  <Users className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-xl md:text-2xl font-semibold">{talentAccordionTitle}</span>
+        {/* Dynamic Accordion Sections */}
+        <div className="w-full space-y-6">
+          {parsedAccordions.map((accordion) => (
+            <div key={accordion.id} className="p-4 pr-10 rounded-3xl bg-gray-100">
+              <details className="group" open={accordion.isOpen}>
+                <summary className="flex items-center justify-between cursor-pointer list-none">
+                  <div className="flex items-center">
+                    {getIcon(accordion.icon)}
+                    <span className="text-xl md:text-2xl font-semibold">{accordion.title}</span>
+                  </div>
+                  <img 
+                    src="/arrow2.svg" 
+                    alt="Chevron Down" 
+                    className="h-6 w-10 shrink-0 text-gray-400 transition-transform group-open:rotate-180" 
+                  />
+                </summary>
+                <div className="pt-4 text-base">
+                  <p className="text-gray-600 pl-[50px] md:pl-[300px] text-xl md:text-2xl font-thin">
+                    {accordion.description}
+                  </p>
                 </div>
-                {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
-                <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+              </details>
+            </div>
+          ))}
+        </div>
 
-              </summary>
-              <div className="  pt-4 text-base">
-                <p className="text-gray-600 pl-[50px] md:pl-[300px]   text-xl md:text-2xl font-thin">
-                  {talentAccordionDescription}
-                </p>
-              </div>
-            </details>
-          </div>
-
-          {/* Job Accordion Item */}
-          <div className="   p-4 pr-10 rounded-3xl bg-gray-100 mt-6">
-            <details className="group">
-              <summary className="flex items-center justify-between cursor-pointer list-none">
-                <div className="flex items-center">
-                  <FileText className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-xl md:text-2xl font-semibold">{jobAccordionTitle}</span>
-                </div>
-                {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
-                <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
-              </summary>
-              <div className=" pt-4 text-base">
-                      <p className="text-gray-600 pl-[50px] md:pl-[300px]   text-xl md:text-2xl font-thin">
-                  {jobAccordionDescription}
-                </p>
-              </div>
-            </details>
-          </div>
-
+        {/* Hidden/Disabled Accordion Items (keeping for reference) */}
+        <div className="hidden">
           {/* Booking Accordion Item */}
           <div className="border-b border-gray-200 py-4 d-none ">
             <details className="group">
@@ -99,9 +106,7 @@ const WhySourcedSection = () => {
                   <Calendar className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
                   <span className="text-xl md:text-2xl font-semibold">Book and Manage Seamlessly</span>
                 </div>
-                {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
                 <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
-
               </summary>
               <div className="pl-12 pt-4 text-base">
                 <p className="text-gray-600">
@@ -121,9 +126,7 @@ const WhySourcedSection = () => {
                   <CreditCard className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
                   <span className="text-xl md:text-2xl font-semibold">Payment Made Simple</span>
                 </div>
-                {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
                 <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
-
               </summary>
               <div className="pl-12 pt-4 text-base">
                 <p className="text-gray-600">

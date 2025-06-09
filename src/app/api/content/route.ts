@@ -139,32 +139,13 @@ export async function GET() {
           placeholder: 'Enter section title'
         },
         {
-          id: 'talent-accordion-title',
-          title: 'Find Talent - Title',
-          type: 'text',
-          value: 'Find and Shortlist Talent',
-          placeholder: 'Enter accordion title'
-        },
-        {
-          id: 'talent-accordion-description',
-          title: 'Find Talent - Description',
-          type: 'textarea',
-          value: 'Discover a curated network of top creative professionals. Browse portfolios, filter by specialization, and easily shortlist the perfect collaborators for your project needs.',
-          placeholder: 'Enter accordion description'
-        },
-        {
-          id: 'job-accordion-title',
-          title: 'Post Job - Title',
-          type: 'text',
-          value: 'Post Your Job in Minutes',
-          placeholder: 'Enter accordion title'
-        },
-        {
-          id: 'job-accordion-description',
-          title: 'Post Job - Description',
-          type: 'textarea',
-          value: 'Create detailed job postings in just a few clicks. Specify your project requirements, timeline, and budget, then share it with our network of talented professionals.',
-          placeholder: 'Enter accordion description'
+          id: 'accordion-items',
+          title: 'Accordion Items',
+          type: 'accordion',
+          value: [
+            'Find and Shortlist Talent|Discover a curated network of top creative professionals. Browse portfolios, filter by specialization, and easily shortlist the perfect collaborators for your project needs.|Users',
+            'Post Your Job in Minutes|Create detailed job postings in just a few clicks. Specify your project requirements, timeline, and budget, then share it with our network of talented professionals.|FileText'
+          ]
         }
       ]
     };
