@@ -37,6 +37,9 @@ export interface FormField {
   type: string;
   placeholder: string;
   isOptional?: boolean;
+  options?: string[];
+  fields?: FormField[];
+  repeatable?: boolean;
 }
 
 function extractCommonFields(...roles: FormField[][]): FormField[] {
@@ -50,7 +53,7 @@ function extractCommonFields(...roles: FormField[][]): FormField[] {
   });
 
   const commonNames = Array.from(fieldMap.entries())
-    .filter(([_, count]) => count > 1)
+    .filter(([, count]) => count > 1)
     .map(([name]) => name);
 
   // Find and return the full field definition (first occurrence is enough)
@@ -120,6 +123,7 @@ export const photographerFields: FormField[] = [
     name: "gender",
     label: "Gender",
     type: "select",
+    placeholder: "Select your gender",
     options: ["Male", "Female", "Other", "Prefer not to say"]
   },
   {
@@ -232,6 +236,7 @@ export const videographerFields: FormField[] = [
     name: "gender",
     label: "Gender",
     type: "select",
+    placeholder: "Select your gender",
     options: ["Male", "Female", "Other", "Prefer not to say"]
   },
   {
@@ -335,6 +340,7 @@ export const vehiclesFields: FormField[] = [
     name: "vehicles",
     label: "Vehicles",
     type: "group",
+    placeholder: "Vehicle information",
     repeatable: true,
     fields: [
       {
@@ -372,6 +378,7 @@ export const vehiclesFields: FormField[] = [
         name: "canDrive",
         label: "Can it be driven?",
         type: "radio",
+        placeholder: "Select an option",
         options: ["Yes", "No"]
       }
     ]

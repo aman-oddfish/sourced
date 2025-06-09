@@ -1,6 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
+// Declare Tawk_API on window object
+declare global {
+  interface Window {
+    Tawk_API?: {
+      showWidget: () => void;
+      maximize: () => void;
+      hideWidget?: () => void;
+    };
+    Tawk_LoadStart?: Date;
+  }
+}
+
 import { ReactLenis, useLenis } from 'lenis/react';
 import { motion } from 'framer-motion';
 import Image from "next/image";

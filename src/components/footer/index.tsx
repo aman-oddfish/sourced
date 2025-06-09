@@ -5,6 +5,17 @@ import { motion, useAnimation, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Script from 'next/script';
 
+// Declare Tawk_API on window object
+declare global {
+  interface Window {
+    Tawk_API?: {
+      showWidget: () => void;
+      maximize: () => void;
+      hideWidget?: () => void;
+    };
+    Tawk_LoadStart?: Date;
+  }
+}
 
 // Define animation variants for the Sourced text
 const logoVariants: Variants = {
@@ -238,7 +249,13 @@ export const Footer: FC = () => {
         strategy="afterInteractive"
         src="https://embed.tawk.to/67cbecbd2c2717190f9e743f/1ilq99hcs"
          onLoad={() => {
-          window.Tawk_API = window.Tawk_API || {};
+          if (!window.Tawk_API) {
+            window.Tawk_API = {
+              showWidget: () => {},
+              maximize: () => {},
+              hideWidget: () => {}
+            };
+          }
           window.Tawk_LoadStart = new Date();
 
           // Wait for Tawk to be ready, then hide the widget
@@ -251,7 +268,6 @@ export const Footer: FC = () => {
         }}
         async
         charSet="UTF-8"
-        crossOrigin="*"
       />
  
     </footer>
