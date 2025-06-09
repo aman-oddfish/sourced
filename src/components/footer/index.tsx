@@ -183,7 +183,7 @@ export const Footer: FC = () => {
         animate={controls}
         variants={logoVariants}
       >
-        <h1 className="text-7xl md:text-[10rem] font-black tracking-tighter flex overflow-hidden">
+        <h1 className="text-5xl md:text-[8rem] font-black tracking-tighter flex overflow-hidden">
           {logoLetters.map((letter, index) => (
             <motion.span
               key={index}

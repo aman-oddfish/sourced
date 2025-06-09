@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Upload, Eye, EyeOff, Settings, Home, Users, FileText, Image as ImageIcon, Lock, Unlock, Plus, Trash2, Code, ExternalLink } from 'lucide-react';
+import { Save, Upload, Eye, EyeOff, Settings, Home, Users, FileText, Lock, Unlock, Plus, Trash2, Code, ExternalLink } from 'lucide-react';
 
 // Types for content management
 interface ContentSection {
@@ -149,6 +149,13 @@ export default function AdminDashboard() {
         value: 'Sourced simplifies creative connections. Find and hire top photographers, videographers, models, and more.',
         placeholder: 'Enter meta description',
         maxLength: 160
+      },
+      {
+        id: 'site-favicon',
+        title: 'Site Favicon',
+        type: 'image',
+        value: '/favicon.ico',
+        placeholder: 'Upload favicon (16x16 or 32x32 pixels, .ico or .png format)'
       }
     ],
     whySourced: [
@@ -225,6 +232,40 @@ export default function AdminDashboard() {
     }
   }, []);
 
+  // Load content from API when authenticated
+  useEffect(() => {
+    const loadContent = async () => {
+      if (!isAuthenticated) return;
+      
+      try {
+        const response = await fetch('/api/content');
+        if (response.ok) {
+          const apiContent = await response.json();
+          setContentData(apiContent);
+        } else {
+          // Fallback to localStorage
+          const savedContent = localStorage.getItem('site-content');
+          if (savedContent) {
+            setContentData(JSON.parse(savedContent));
+          }
+        }
+      } catch (error) {
+        console.error('Error loading content:', error);
+        // Fallback to localStorage
+        const savedContent = localStorage.getItem('site-content');
+        if (savedContent) {
+          try {
+            setContentData(JSON.parse(savedContent));
+          } catch (parseError) {
+            console.error('Error parsing saved content:', parseError);
+          }
+        }
+      }
+    };
+
+    loadContent();
+  }, [isAuthenticated]);
+
   const handleContentChange = (sectionKey: keyof ContentData, itemId: string, newValue: string | string[]) => {
     setContentData(prev => ({
       ...prev,
@@ -278,23 +319,67 @@ export default function AdminDashboard() {
   };
 
   const handleImageUpload = (sectionKey: keyof ContentData, itemId: string, file: File) => {
-    // In a real implementation, you'd upload to a cloud service
+    // Validate file for favicon
+    if (itemId === 'site-favicon') {
+      const validTypes = ['image/x-icon', 'image/vnd.microsoft.icon', 'image/png', 'image/svg+xml'];
+      if (!validTypes.includes(file.type) && !file.name.endsWith('.ico')) {
+        alert('Please upload a valid favicon file (.ico, .png, or .svg)');
+        return;
+      }
+      
+      // Check file size (favicons should be small)
+      if (file.size > 1024 * 1024) { // 1MB limit
+        alert('Favicon file size should be less than 1MB');
+        return;
+      }
+    }
+
+    // For now, convert to data URL (in production, upload to cloud storage)
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
       handleContentChange(sectionKey, itemId, result);
+      
+      // For favicon, also update the document favicon immediately for preview
+      if (itemId === 'site-favicon') {
+        const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement || document.createElement('link');
+        link.type = file.type;
+        link.rel = 'shortcut icon';
+        link.href = result;
+        document.getElementsByTagName('head')[0].appendChild(link);
+      }
     };
+    
+    reader.onerror = () => {
+      alert('Error reading file. Please try again.');
+    };
+    
     reader.readAsDataURL(file);
   };
 
   const saveChanges = async () => {
     try {
-      // In a real implementation, save to database/API
+      // Save to localStorage (immediate fallback)
       localStorage.setItem('site-content', JSON.stringify(contentData));
+      
+      // Also save to API endpoint for persistence
+      const response = await fetch('/api/content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contentData),
+      });
+      
+      if (!response.ok) {
+        console.warn('API save failed, but localStorage save succeeded');
+      }
+      
       setHasChanges(false);
       alert('Changes saved successfully!');
     } catch (error) {
-      alert('Error saving changes');
+      console.error('Error saving changes:', error);
+      alert('Error saving changes. Please try again.');
     }
   };
 
@@ -392,18 +477,26 @@ export default function AdminDashboard() {
                     className={`object-cover border rounded-lg ${
                       section.id === 'brand-logo' 
                         ? 'h-16 w-16 border-2 border-gray-300 shadow-sm' 
+                        : section.id === 'site-favicon'
+                        ? 'h-8 w-8 border border-gray-300 bg-white p-1'
                         : 'h-20 w-20 border'
                     }`}
                   />
                   {section.id === 'brand-logo' && (
                     <p className="text-xs text-gray-500 mt-1 text-center">Square Logo</p>
                   )}
+                  {section.id === 'site-favicon' && (
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 mt-1">Favicon</p>
+                      <p className="text-xs text-gray-400">Browser icon</p>
+                    </div>
+                  )}
                 </div>
               )}
               <div className="flex-1">
                 <input
                   type="file"
-                  accept="image/*"
+                  accept={section.id === 'site-favicon' ? '.ico,.png,.svg,image/x-icon,image/png,image/svg+xml' : 'image/*'}
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
@@ -418,11 +511,16 @@ export default function AdminDashboard() {
                   className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors"
                 >
                   <Upload className="h-4 w-4 mr-2" />
-                  Upload Image
+                  {section.id === 'site-favicon' ? 'Upload Favicon' : 'Upload Image'}
                 </label>
                 {section.id === 'brand-logo' && (
                   <p className="text-xs text-gray-600 mt-2">
                     For best results, upload a square image (1:1 aspect ratio) like 512x512px
+                  </p>
+                )}
+                {section.id === 'site-favicon' && (
+                  <p className="text-xs text-gray-600 mt-2">
+                    Upload a small icon (16x16 or 32x32 pixels). Supported formats: .ico, .png, .svg
                   </p>
                 )}
               </div>

@@ -248,13 +248,13 @@ export default function Home() {
                 />
                 {/* Dark overlay for readability */}
                 <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
-                <VelocityScroll
+                {/* <VelocityScroll
                   numRows={1}
                   defaultVelocity={0.8}
                   className={`absolute bottom-20 text-2xl text-[#c0c0c0] tracking-normal font-thin italic ${GarmondI.className}`}
                 >
                   {launchingText}
-                </VelocityScroll>
+                </VelocityScroll> */}
               </div>
               {/* Hero Content */}
               <div className="relative z-10">

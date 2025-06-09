@@ -4,10 +4,9 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, HelpCircle, ArrowLeft, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { basicDetailsFields, creativeRoles, finalPhotographerFields, finalVehiclesFields, finalVideographerFields, photographerFields, vehiclesFields, videographerFields, type CreativeRole } from "@/components/signup/SignupFlow";
+import { basicDetailsFields, creativeRoles, finalPhotographerFields, finalVehiclesFields, finalVideographerFields, type CreativeRole } from "@/components/signup/SignupFlow";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Basic } from "next/font/google";
 
 type FormData = Record<string, string | File[] | null>;
 
@@ -136,9 +135,9 @@ const handleSubmit = async ( ) => {
 
 
   const getFieldsForCurrentRole = () => {
-    if (currentRole === "Photographer") return finalPhotographerFields;
-    if (currentRole === "Videographer") return finalVideographerFields;
-    if (currentRole === "Vehicle") {
+    if (currentRole === "PHOTOGRAPHER") return finalPhotographerFields;
+    if (currentRole === "VIDEOGRAPHER") return finalVideographerFields;
+    if (currentRole === "VEHICLE OWNER") {
       return  finalVehiclesFields
 
     }
@@ -358,7 +357,7 @@ const handleSubmit = async ( ) => {
                     <div
                       key={role}
                       className={`border-b border-gray-200 last:border-b-0 ${
-                        role !== "Photographer" && role !== "Videographer" &&  role !== "Vehicle" ? "opacity-50" : ""
+                        role !== "PHOTOGRAPHER" && role !== "VIDEOGRAPHER" &&  role !== "VEHICLE OWNER" ? "opacity-50" : ""
                       }`}
                     >
                       <button
@@ -366,7 +365,7 @@ const handleSubmit = async ( ) => {
                         className={`w-full text-left py-3.5 px-4 flex items-center justify-between ${
                           selectedRoles.includes(role) ? "bg-black text-white" : "hover:bg-gray-50"
                         }`}
-                        disabled={role !== "Photographer" && role !== "Videographer" && role !== "Vehicle"}
+                        disabled={role !== "PHOTOGRAPHER" && role !== "VIDEOGRAPHER" && role !== "VEHICLE OWNER"}
                       >
                         <span className="text-base font-medium">{role}</span>
                         {selectedRoles.includes(role) && (

@@ -35,9 +35,12 @@ export async function GET() {
           title: 'Morphing Text Options',
           type: 'array',
           value: [
-            'Photographer', 'Videographer', 'VEHICLE OWNER', 'MODEL', 
-            'INFLUENCER', 'ACTOR', 'STYLIST', 'HAIR STYLIST', 
-            'MAKEUP ARTIST', 'EQUIPTMENT', 'LOCATION', 'OTHER'
+            'MODEL', 'INFLUENCER', 'ACTOR', 'STYLIST', 'HAIR STYLIST', 
+            'MAKEUP ARTIST', 'PHOTOGRAPHER', 'VIDEOGRAPHER', 'ASSISTANT', 'LIGHTING', 
+            'DIRECTOR', 'COSTUME DESIGNER', 'PRODUCER', 'SOUND ENGINEER', 'POST PRODUCTION', 
+            'WRITER', 'FIT MODEL', 'TALENT AGENT', 'SET DESIGNER', 'GRAPHIC DESIGNER', 
+            'VEHICLE OWNER', 'EQUIPTMENT', 'PROPS', 'LOCATION (STUDIOS, HOUSES & OTHER)', 
+            'BRAND', 'OTHER'
           ]
         },
         {
@@ -66,13 +69,13 @@ export async function GET() {
         {
           id: 'how-it-works-items',
           title: 'How It Works Menu Items',
-          type: 'array',
+          type: 'navMenu',
           value: ['For Talent|/for-talent', 'For Agents|/for-agents', 'Pricing|/pricing', 'Security|/security']
         },
         {
           id: 'company-items',
           title: 'Company Menu Items',
-          type: 'array',
+          type: 'navMenu',
           value: ['About|/about', 'Information|/information', 'Team|/team', 'Careers|/careers']
         }
       ],
@@ -128,6 +131,13 @@ export async function GET() {
           value: 'Sourced simplifies creative connections. Find and hire top photographers, videographers, models, and more.',
           placeholder: 'Enter meta description',
           maxLength: 160
+        },
+        {
+          id: 'site-favicon',
+          title: 'Site Favicon',
+          type: 'image',
+          value: '/favicon.ico',
+          placeholder: 'Upload favicon (16x16 or 32x32 pixels, .ico or .png format)'
         }
       ],
       whySourced: [

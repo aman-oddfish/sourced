@@ -51,9 +51,12 @@ const defaultContent: ContentData = {
       title: 'Morphing Text Options',
       type: 'array',
       value: [
-        'Photographer', 'Videographer', 'VEHICLE OWNER', 'MODEL', 
-        'INFLUENCER', 'ACTOR', 'STYLIST', 'HAIR STYLIST', 
-        'MAKEUP ARTIST', 'EQUIPTMENT', 'LOCATION', 'OTHER'
+        'MODEL', 'INFLUENCER', 'ACTOR', 'STYLIST', 'HAIR STYLIST', 
+        'MAKEUP ARTIST', 'PHOTOGRAPHER', 'VIDEOGRAPHER', 'ASSISTANT', 'LIGHTING', 
+        'DIRECTOR', 'COSTUME DESIGNER', 'PRODUCER', 'SOUND ENGINEER', 'POST PRODUCTION', 
+        'WRITER', 'FIT MODEL', 'TALENT AGENT', 'SET DESIGNER', 'GRAPHIC DESIGNER', 
+        'VEHICLE OWNER', 'EQUIPTMENT', 'PROPS', 'LOCATION (STUDIOS, HOUSES & OTHER)', 
+        'BRAND', 'OTHER'
       ]
     },
     {
@@ -144,6 +147,13 @@ const defaultContent: ContentData = {
       value: 'Sourced simplifies creative connections. Find and hire top photographers, videographers, models, and more.',
       placeholder: 'Enter meta description',
       maxLength: 160
+    },
+    {
+      id: 'site-favicon',
+      title: 'Site Favicon',
+      type: 'image',
+      value: '/favicon.ico',
+      placeholder: 'Upload favicon (16x16 or 32x32 pixels, .ico or .png format)'
     }
   ],
   whySourced: [
@@ -317,6 +327,7 @@ export const useContentManager = () => {
     linkedinIcon: getImage('footer', 'linkedin-icon'),
     siteTitle: getText('general', 'site-title'),
     metaDescription: getText('general', 'meta-description'),
+    siteFavicon: getImage('general', 'site-favicon'),
     // Why Sourced section getters
     whySourcedBadge: getText('whySourced', 'why-sourced-badge'),
     whySourcedTitle: getText('whySourced', 'why-sourced-title'),
