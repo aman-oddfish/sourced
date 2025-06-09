@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Upload, Eye, EyeOff, Settings, Home, Users, FileText, Image as ImageIcon, Lock, Unlock, Plus, Trash2 } from 'lucide-react';
+import { Save, Upload, Eye, EyeOff, Settings, Home, Users, FileText, Image as ImageIcon, Lock, Unlock, Plus, Trash2, Code, ExternalLink } from 'lucide-react';
 
 // Types for content management
 interface ContentSection {
   id: string;
   title: string;
-  type: 'text' | 'textarea' | 'image' | 'array' | 'accordion';
+  type: 'text' | 'textarea' | 'image' | 'array' | 'accordion' | 'pages' | 'footerLinks' | 'navMenu';
   value: string | string[];
   placeholder?: string;
   maxLength?: number;
@@ -20,6 +20,8 @@ interface ContentData {
   footer: ContentSection[];
   general: ContentSection[];
   whySourced: ContentSection[];
+  pages: ContentSection[];
+  footerLinks: ContentSection[];
 }
 
 export default function AdminDashboard() {
@@ -76,16 +78,23 @@ export default function AdminDashboard() {
         placeholder: 'Enter brand name'
       },
       {
+        id: 'brand-logo',
+        title: 'Brand Logo (Square Image)',
+        type: 'image',
+        value: '',
+        placeholder: 'Upload square logo image'
+      },
+      {
         id: 'how-it-works-items',
         title: 'How It Works Menu Items',
-        type: 'array',
-        value: ['For Talent', 'For Agents', 'Pricing', 'Security']
+        type: 'navMenu',
+        value: ['For Talent|/for-talent', 'For Agents|/for-agents', 'Pricing|/pricing', 'Security|/security']
       },
       {
         id: 'company-items',
         title: 'Company Menu Items',
-        type: 'array',
-        value: ['About', 'Information', 'Team', 'Careers']
+        type: 'navMenu',
+        value: ['About|/about', 'Information|/information', 'Team|/team', 'Careers|/careers']
       }
     ],
     footer: [
@@ -164,6 +173,34 @@ export default function AdminDashboard() {
         value: [
           'Find and Shortlist Talent|Discover a curated network of top creative professionals. Browse portfolios, filter by specialization, and easily shortlist the perfect collaborators for your project needs.|Users',
           'Post Your Job in Minutes|Create detailed job postings in just a few clicks. Specify your project requirements, timeline, and budget, then share it with our network of talented professionals.|FileText'
+        ]
+      }
+    ],
+    pages: [
+      {
+        id: 'site-pages',
+        title: 'Website Pages',
+        type: 'pages',
+        value: [
+          'about|About Us|<h1>About Sourced</h1><p>We are a creative network connecting talent with opportunities.</p>',
+          'contact|Contact|<h1>Contact Us</h1><p>Get in touch with our team.</p>',
+          'pricing|Pricing|<h1>Pricing</h1><p>Transparent pricing for all our services.</p>',
+          'terms|Terms & Conditions|<h1>Terms & Conditions</h1><p>Please read our terms and conditions carefully.</p>',
+          'privacy|Privacy Policy|<h1>Privacy Policy</h1><p>Your privacy is important to us.</p>',
+          'careers|Careers|<h1>Join Our Team</h1><p>Explore career opportunities at Sourced.</p>'
+        ]
+      }
+    ],
+    footerLinks: [
+      {
+        id: 'footer-columns',
+        title: 'Footer Link Columns',
+        type: 'footerLinks',
+        value: [
+          'Account|login:Login,join:Join',
+          'How It Works|pricing:Pricing,booking:Booking,for-creator:For a Creator,for-agency:For an Agency',
+          'Company|about:About,contact:Contact,careers:Careers',
+          'Legal|terms:Terms,privacy:Privacy'
         ]
       }
     ]
@@ -305,6 +342,8 @@ export default function AdminDashboard() {
     { id: 'hero', label: 'Hero Section', icon: Home },
     { id: 'navigation', label: 'Navigation', icon: Settings },
     { id: 'whySourced', label: 'Why Sourced', icon: Users },
+    { id: 'pages', label: 'Pages', icon: FileText },
+    { id: 'footerLinks', label: 'Footer Links', icon: ExternalLink },
     { id: 'footer', label: 'Footer', icon: FileText },
     { id: 'general', label: 'General', icon: Users }
   ];
@@ -346,11 +385,20 @@ export default function AdminDashboard() {
           <div className="space-y-3">
             <div className="flex items-center space-x-4">
               {section.value && (
-                <img
-                  src={section.value as string}
-                  alt={section.title}
-                  className="h-20 w-20 object-cover rounded-lg border"
-                />
+                <div className="flex-shrink-0">
+                  <img
+                    src={section.value as string}
+                    alt={section.title}
+                    className={`object-cover border rounded-lg ${
+                      section.id === 'brand-logo' 
+                        ? 'h-16 w-16 border-2 border-gray-300 shadow-sm' 
+                        : 'h-20 w-20 border'
+                    }`}
+                  />
+                  {section.id === 'brand-logo' && (
+                    <p className="text-xs text-gray-500 mt-1 text-center">Square Logo</p>
+                  )}
+                </div>
               )}
               <div className="flex-1">
                 <input
@@ -372,6 +420,11 @@ export default function AdminDashboard() {
                   <Upload className="h-4 w-4 mr-2" />
                   Upload Image
                 </label>
+                {section.id === 'brand-logo' && (
+                  <p className="text-xs text-gray-600 mt-2">
+                    For best results, upload a square image (1:1 aspect ratio) like 512x512px
+                  </p>
+                )}
               </div>
             </div>
             <input
@@ -381,6 +434,176 @@ export default function AdminDashboard() {
               placeholder="Or enter image URL"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
             />
+          </div>
+        );
+      
+      case 'pages':
+        return (
+          <div className="space-y-4">
+            {(section.value as string[]).map((item, index) => {
+              const [slug, title, html] = item.split('|');
+              return (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium text-gray-900 flex items-center gap-2">
+                      <Code className="h-4 w-4" />
+                      Page {index + 1}: /{slug || 'new-page'}
+                    </h4>
+                    <div className="flex items-center gap-2">
+                      <a 
+                        href={`/${slug}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                        title="Preview page"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                      <button
+                        onClick={() => removeArrayItem(sectionKey, section.id, index)}
+                        className="p-1 text-red-600 hover:bg-red-50 rounded"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">URL Slug</label>
+                        <input
+                          type="text"
+                          value={slug || ''}
+                          onChange={(e) => {
+                            const newValue = `${e.target.value}|${title || ''}|${html || ''}`;
+                            handleArrayItemChange(sectionKey, section.id, index, newValue);
+                          }}
+                          placeholder="page-url"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Page Title</label>
+                        <input
+                          type="text"
+                          value={title || ''}
+                          onChange={(e) => {
+                            const newValue = `${slug || ''}|${e.target.value}|${html || ''}`;
+                            handleArrayItemChange(sectionKey, section.id, index, newValue);
+                          }}
+                          placeholder="Page Title"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">HTML Content</label>
+                      <textarea
+                        value={html || ''}
+                        onChange={(e) => {
+                          const newValue = `${slug || ''}|${title || ''}|${e.target.value}`;
+                          handleArrayItemChange(sectionKey, section.id, index, newValue);
+                        }}
+                        placeholder="<h1>Page Title</h1><p>Page content...</p>"
+                        rows={8}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent font-mono text-sm"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        You can use HTML tags like &lt;h1&gt;, &lt;p&gt;, &lt;div&gt;, &lt;img&gt;, etc.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            
+            <button
+              onClick={() => {
+                const newPage = 'new-page|New Page|<h1>New Page</h1><p>Add your content here...</p>';
+                addArrayItem(sectionKey, section.id);
+                const currentItems = section.value as string[];
+                const newItems = [...currentItems];
+                newItems[newItems.length - 1] = newPage;
+                handleContentChange(sectionKey, section.id, newItems);
+              }}
+              className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-gray-400 hover:text-gray-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add New Page
+            </button>
+          </div>
+        );
+
+      case 'footerLinks':
+        return (
+          <div className="space-y-4">
+            {(section.value as string[]).map((item, index) => {
+              const [columnTitle, links] = item.split('|');
+              return (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium text-gray-900">Footer Column {index + 1}</h4>
+                    <button
+                      onClick={() => removeArrayItem(sectionKey, section.id, index)}
+                      className="p-1 text-red-600 hover:bg-red-50 rounded"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Column Title</label>
+                      <input
+                        type="text"
+                        value={columnTitle || ''}
+                        onChange={(e) => {
+                          const newValue = `${e.target.value}|${links || ''}`;
+                          handleArrayItemChange(sectionKey, section.id, index, newValue);
+                        }}
+                        placeholder="Column Title"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Links</label>
+                      <textarea
+                        value={links || ''}
+                        onChange={(e) => {
+                          const newValue = `${columnTitle || ''}|${e.target.value}`;
+                          handleArrayItemChange(sectionKey, section.id, index, newValue);
+                        }}
+                        placeholder="slug:Display Name,another-slug:Another Link"
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Format: slug:Display Name,another-slug:Another Link
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            
+            <button
+              onClick={() => {
+                const newColumn = 'New Column|new-link:New Link';
+                addArrayItem(sectionKey, section.id);
+                const currentItems = section.value as string[];
+                const newItems = [...currentItems];
+                newItems[newItems.length - 1] = newColumn;
+                handleContentChange(sectionKey, section.id, newItems);
+              }}
+              className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-gray-400 hover:text-gray-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add New Footer Column
+            </button>
           </div>
         );
       
@@ -467,6 +690,77 @@ export default function AdminDashboard() {
             >
               <Plus className="h-4 w-4" />
               Add New Accordion Item
+            </button>
+          </div>
+        );
+      
+      case 'navMenu':
+        return (
+          <div className="space-y-4">
+            {(section.value as string[]).map((item, index) => {
+              const [label, url] = item.split('|');
+              return (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium text-gray-900">Menu Item {index + 1}</h4>
+                    <button
+                      onClick={() => removeArrayItem(sectionKey, section.id, index)}
+                      className="p-1 text-red-600 hover:bg-red-50 rounded"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Display Text</label>
+                      <input
+                        type="text"
+                        value={label || ''}
+                        onChange={(e) => {
+                          const newValue = `${e.target.value}|${url || ''}`;
+                          handleArrayItemChange(sectionKey, section.id, index, newValue);
+                        }}
+                        placeholder="Menu item text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">URL</label>
+                      <input
+                        type="text"
+                        value={url || ''}
+                        onChange={(e) => {
+                          const newValue = `${label || ''}|${e.target.value}`;
+                          handleArrayItemChange(sectionKey, section.id, index, newValue);
+                        }}
+                        placeholder="/page-url or https://external.com"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="text-xs text-gray-500">
+                    Preview: <span className="font-mono bg-gray-100 px-1 rounded">{label || 'Menu Text'}</span> → <span className="font-mono bg-gray-100 px-1 rounded">{url || '/url'}</span>
+                  </div>
+                </div>
+              );
+            })}
+            
+            <button
+              onClick={() => {
+                const newMenuItem = 'New Menu Item|/new-page';
+                addArrayItem(sectionKey, section.id);
+                const currentItems = section.value as string[];
+                const newItems = [...currentItems];
+                newItems[newItems.length - 1] = newMenuItem;
+                handleContentChange(sectionKey, section.id, newItems);
+              }}
+              className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-gray-400 hover:text-gray-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Add New Menu Item
             </button>
           </div>
         );

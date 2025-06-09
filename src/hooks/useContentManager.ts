@@ -18,6 +18,8 @@ interface ContentData {
   footer: ContentSection[];
   general: ContentSection[];
   whySourced: ContentSection[];
+  pages: ContentSection[];
+  footerLinks: ContentSection[];
 }
 
 // Default content structure
@@ -71,16 +73,23 @@ const defaultContent: ContentData = {
       placeholder: 'Enter brand name'
     },
     {
+      id: 'brand-logo',
+      title: 'Brand Logo (Square Image)',
+      type: 'image',
+      value: '',
+      placeholder: 'Upload square logo image'
+    },
+    {
       id: 'how-it-works-items',
       title: 'How It Works Menu Items',
       type: 'array',
-      value: ['For Talent', 'For Agents', 'Pricing', 'Security']
+      value: ['For Talent|/for-talent', 'For Agents|/for-agents', 'Pricing|/pricing', 'Security|/security']
     },
     {
       id: 'company-items',
       title: 'Company Menu Items',
       type: 'array',
-      value: ['About', 'Information', 'Team', 'Careers']
+      value: ['About|/about', 'Information|/information', 'Team|/team', 'Careers|/careers']
     }
   ],
   footer: [
@@ -161,6 +170,34 @@ const defaultContent: ContentData = {
         'Post Your Job in Minutes|Create detailed job postings in just a few clicks. Specify your project requirements, timeline, and budget, then share it with our network of talented professionals.|FileText'
       ]
     }
+  ],
+  pages: [
+    {
+      id: 'site-pages',
+      title: 'Website Pages',
+      type: 'array',
+      value: [
+        'about|About Us|<h1>About Sourced</h1><p>We are a creative network connecting talent with opportunities.</p>',
+        'contact|Contact|<h1>Contact Us</h1><p>Get in touch with our team.</p>',
+        'pricing|Pricing|<h1>Pricing</h1><p>Transparent pricing for all our services.</p>',
+        'terms|Terms & Conditions|<h1>Terms & Conditions</h1><p>Please read our terms and conditions carefully.</p>',
+        'privacy|Privacy Policy|<h1>Privacy Policy</h1><p>Your privacy is important to us.</p>',
+        'careers|Careers|<h1>Join Our Team</h1><p>Explore career opportunities at Sourced.</p>'
+      ]
+    }
+  ],
+  footerLinks: [
+    {
+      id: 'footer-columns',
+      title: 'Footer Link Columns',
+      type: 'array',
+      value: [
+        'Account|login:Login,join:Join',
+        'How It Works|pricing:Pricing,booking:Booking,for-creator:For a Creator,for-agency:For an Agency',
+        'Company|about:About,contact:Contact,careers:Careers',
+        'Legal|terms:Terms,privacy:Privacy'
+      ]
+    }
   ]
 };
 
@@ -175,7 +212,21 @@ export const useContentManager = () => {
         const savedContent = localStorage.getItem('site-content');
         if (savedContent) {
           const parsedContent = JSON.parse(savedContent);
-          setContent(parsedContent);
+          // Merge with default content to ensure all sections exist
+          const mergedContent = {
+            ...defaultContent,
+            ...parsedContent
+          };
+          // Ensure each section has the required structure
+          Object.keys(defaultContent).forEach(key => {
+            const sectionKey = key as keyof ContentData;
+            if (!mergedContent[sectionKey] || !Array.isArray(mergedContent[sectionKey])) {
+              mergedContent[sectionKey] = defaultContent[sectionKey];
+            }
+          });
+          setContent(mergedContent);
+        } else {
+          setContent(defaultContent);
         }
       } catch (error) {
         console.error('Error loading content:', error);
@@ -192,6 +243,9 @@ export const useContentManager = () => {
   // Helper function to get content by section and ID
   const getContent = (section: keyof ContentData, id: string): string | string[] => {
     const sectionContent = content[section];
+    if (!sectionContent || !Array.isArray(sectionContent)) {
+      return '';
+    }
     const item = sectionContent.find(item => item.id === id);
     return item?.value || '';
   };
@@ -205,13 +259,34 @@ export const useContentManager = () => {
   // Helper function to get array content
   const getArray = (section: keyof ContentData, id: string): string[] => {
     const value = getContent(section, id);
-    return Array.isArray(value) ? value : [value];
+    return Array.isArray(value) ? value : [value].filter(Boolean);
   };
 
   // Helper function to get image URL
   const getImage = (section: keyof ContentData, id: string): string => {
     const value = getContent(section, id);
     return Array.isArray(value) ? value[0] || '' : value;
+  };
+
+  // Helper function to get navigation menu items with URLs
+  const getNavMenuItems = (section: keyof ContentData, id: string): { label: string; url: string }[] => {
+    const items = getArray(section, id);
+    return items.map(item => {
+      const [label, url] = item.split('|');
+      return { 
+        label: label || '', 
+        url: url || '#' 
+      };
+    });
+  };
+
+  // Helper function to get navigation menu labels only (for backward compatibility)
+  const getNavMenuLabels = (section: keyof ContentData, id: string): string[] => {
+    const items = getArray(section, id);
+    return items.map(item => {
+      const [label] = item.split('|');
+      return label || '';
+    });
   };
 
   return {
@@ -221,6 +296,8 @@ export const useContentManager = () => {
     getText,
     getArray,
     getImage,
+    getNavMenuItems,
+    getNavMenuLabels,
     // Specific content getters for common use cases
     heroTitle: getText('hero', 'hero-title'),
     heroSubtitle: getText('hero', 'hero-subtitle'),
@@ -228,8 +305,11 @@ export const useContentManager = () => {
     morphingTexts: getArray('hero', 'morphing-texts'),
     launchingText: getText('hero', 'launching-text'),
     brandName: getText('navigation', 'brand-name'),
-    howItWorksItems: getArray('navigation', 'how-it-works-items'),
-    companyItems: getArray('navigation', 'company-items'),
+    brandLogo: getImage('navigation', 'brand-logo'),
+    howItWorksItems: getNavMenuLabels('navigation', 'how-it-works-items'),
+    companyItems: getNavMenuLabels('navigation', 'company-items'),
+    howItWorksMenuItems: getNavMenuItems('navigation', 'how-it-works-items'),
+    companyMenuItems: getNavMenuItems('navigation', 'company-items'),
     subscriptionTitle: getText('footer', 'subscription-title'),
     subscriptionSubtitle: getText('footer', 'subscription-subtitle'),
     copyrightText: getText('footer', 'copyright-text'),
@@ -240,7 +320,10 @@ export const useContentManager = () => {
     // Why Sourced section getters
     whySourcedBadge: getText('whySourced', 'why-sourced-badge'),
     whySourcedTitle: getText('whySourced', 'why-sourced-title'),
-    accordionItems: getArray('whySourced', 'accordion-items')
+    accordionItems: getArray('whySourced', 'accordion-items'),
+    // Pages and footer links
+    sitePages: getArray('pages', 'site-pages'),
+    footerColumns: getArray('footerLinks', 'footer-columns')
   };
 };
 

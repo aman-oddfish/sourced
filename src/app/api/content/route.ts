@@ -57,16 +57,23 @@ export async function GET() {
           placeholder: 'Enter brand name'
         },
         {
+          id: 'brand-logo',
+          title: 'Brand Logo (Square Image)',
+          type: 'image',
+          value: '',
+          placeholder: 'Upload square logo image'
+        },
+        {
           id: 'how-it-works-items',
           title: 'How It Works Menu Items',
           type: 'array',
-          value: ['For Talent', 'For Agents', 'Pricing', 'Security']
+          value: ['For Talent|/for-talent', 'For Agents|/for-agents', 'Pricing|/pricing', 'Security|/security']
         },
         {
           id: 'company-items',
           title: 'Company Menu Items',
           type: 'array',
-          value: ['About', 'Information', 'Team', 'Careers']
+          value: ['About|/about', 'Information|/information', 'Team|/team', 'Careers|/careers']
         }
       ],
       footer: [
@@ -145,6 +152,34 @@ export async function GET() {
           value: [
             'Find and Shortlist Talent|Discover a curated network of top creative professionals. Browse portfolios, filter by specialization, and easily shortlist the perfect collaborators for your project needs.|Users',
             'Post Your Job in Minutes|Create detailed job postings in just a few clicks. Specify your project requirements, timeline, and budget, then share it with our network of talented professionals.|FileText'
+          ]
+        }
+      ],
+      pages: [
+        {
+          id: 'site-pages',
+          title: 'Website Pages',
+          type: 'pages',
+          value: [
+            'about|About Us|<h1>About Sourced</h1><p>We are a creative network connecting talent with opportunities.</p>',
+            'contact|Contact|<h1>Contact Us</h1><p>Get in touch with our team.</p>',
+            'pricing|Pricing|<h1>Pricing</h1><p>Transparent pricing for all our services.</p>',
+            'terms|Terms & Conditions|<h1>Terms & Conditions</h1><p>Please read our terms and conditions carefully.</p>',
+            'privacy|Privacy Policy|<h1>Privacy Policy</h1><p>Your privacy is important to us.</p>',
+            'careers|Careers|<h1>Join Our Team</h1><p>Explore career opportunities at Sourced.</p>'
+          ]
+        }
+      ],
+      footerLinks: [
+        {
+          id: 'footer-columns',
+          title: 'Footer Link Columns',
+          type: 'footerLinks',
+          value: [
+            'Account|login:Login,join:Join',
+            'How It Works|pricing:Pricing,booking:Booking,for-creator:For a Creator,for-agency:For an Agency',
+            'Company|about:About,contact:Contact,careers:Careers',
+            'Legal|terms:Terms,privacy:Privacy'
           ]
         }
       ]

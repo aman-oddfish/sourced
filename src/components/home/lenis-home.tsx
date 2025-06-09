@@ -28,7 +28,7 @@ import { WordRotate } from '../magicui/word-rotate';
 import { Footer } from '../footer';
 import { AuroraText } from '../magicui/aurora-text';
 import { ModelsSection } from './models';
-import Header2 from '../header/header2';
+import SharedHeader from '../header/SharedHeader';
 import TextMask from '../ui/mask';
 import {
   Drawer,
@@ -102,7 +102,6 @@ export default function Home() {
   const [showShareSuccess, setShowShareSuccess] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showStickyHeader, setShowStickyHeader] = useState(false);
   
   // Use content management system
   const {
@@ -207,17 +206,6 @@ export default function Home() {
       window.Tawk_API.maximize();
     }
   };
-    
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowStickyHeader(window.scrollY > 100); // adjust scroll trigger
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
 
   return (
     <ReactLenis root options={{ gestureOrientation: 'vertical', smoothWheel: !modalOpen, touchMultiplier: modalOpen ? 0 : 1 }}>
@@ -235,232 +223,12 @@ export default function Home() {
         <main className={`bg-white text-black min-h-screen  ${creato_display.className}`} >
           <div className="max-w-screen mx-auto">
 
-            {/* Default Header */}
-            
-           {!showStickyHeader &&  <header
-               className="flex justify-between items-center py-6   md:px-12 px-4  z-50   fixed top-0 left-0 w-full backdrop-blur-md"
-                
-               
-             >
-               <h1 className="text-2xl md:text-3xl font-semibold tracking-wide uppercase">
-                 {brandName}
-               </h1>
-               
-               
-               
-               <div className="flex items-center space-x-4">
-               <div className="hidden md:flex items-center space-x-8">
-                 <nav className="bg-white bg-opacity-90 backdrop-blur-md rounded-md px-6 py-2 flex space-x-6">
-                   {/* How It Works Dropdown */}
-                   <div className="static group">
-                     <button className="flex items-center text-black-500 group-hover:text-black transition-colors text-sm md:text-sm font-semibold tracking-wide uppercase">
-                       HOW IT WORKS 
-                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
-                     </button>
-                     
-                     {/* Full-width dropdown - simplified list style */}
-                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
-                       <div className="max-w-screen mx-auto">
-                         <div className="w-full flex flex-col">
-                           {howItWorksItems.map((item, index) => (
-                             <a key={index} href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                               {item}
-                             </a>
-                           ))}
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                   
-                   {/* Company Dropdown */}
-                   <div className="static group">
-                     <button className="flex items-center text-sm md:text-sm font-semibold tracking-wide uppercase text-black-500 group-hover:text-black transition-colors">
-                       COMPANY 
-                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
-                     </button>
-                     
-                     {/* Full-width dropdown - simplified list style */}
-                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
-                       <div className="max-w-screen mx-auto">
-                         <div className="w-full flex flex-col">
-                           {companyItems.map((item, index) => (
-                             <a key={index} href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                               {item}
-                             </a>
-                           ))}
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                   
-                   {/* Legal Dropdown */}
-                   <div className="static group d-none">
-                     <button className="flex items-center text-2xl md:text-3xl font-semibold tracking-wide uppercase text-gray-500 group-hover:text-black transition-colors">
-                       LEGAL(3)
-                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
-                     </button>
-                     
-                     {/* Full-width dropdown - simplified list style */}
-                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
-                       <div className="max-w-screen mx-auto">
-                         <div className="w-full flex flex-col">
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Terms & Conditions
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Privacy Policy
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Licensing
-                           </a>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                   
-                   {/* <a href='#' className="text-sm font-medium text-gray-500 hover:text-black transition-colors">CONTACT</a> */}
-                 </nav>
-               </div>
-                 
-                 {/* Support Button */}
-                 <button 
-                   // onClick={() => window.open('mailto:support@sourced.com', '_blank')}
-                   className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                   aria-label="Support"
-                   onClick={openChat}
-                   disabled={!isLoaded}
-                 >
-                   <Headset className="h-6 w-6 text-gray-700  rounded-full p-1" />
-                 </button>
-                 
-                 <InteractiveHoverButton className='uppercase md:hidden ml-4' onClick={() => setShowPopup(!showPopup)}>
-                   Menu
-                 </InteractiveHoverButton>
-                 {showPopup && (
-                   <div className="absolute right-0 mt-2 w-48 bg-[#EAE7E3] shadow-lg rounded-lg p-4 z-10">
-                     <p className="text-gray-700">More features coming soon!</p>
-                   </div>
-                 )}
-               </div>
-             </header>}
-
-             {/* Sticky Header */}
-            { showStickyHeader &&  <motion.header
-               className="flex justify-between items-center py-6   md:px-12 px-4  z-50   fixed top-0 left-0 w-full backdrop-blur-md"
-               
-               whileInView="visible"
-               variants={stickyRevealVariants}
-               viewport={{ once: true, amount: 0.2 }}
-               initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-             >
-               <div className='innerHeader flex items-center justify-between 
-               border-b border-black
-               pb-4 md:pb-4    
-               w-full'>
-                     <h1 className="text-2xl md:text-3xl font-semibold tracking-wide uppercase">
-                 O
-               </h1>
-               
-               
-               
-               <div className="flex items-center space-x-4">
-               <div className="hidden md:flex items-center space-x-8">
-                 <nav className="  bg-opacity-50 backdrop-blur-md   px-6 py-2 flex space-x-6">
-                   {/* How It Works Dropdown */}
-                   <div className="static group">
-                     <button className="flex items-center text-black-500 group-hover:text-black transition-colors text-sm md:text-sm font-semibold tracking-wide uppercase">
-                       HOW IT WORKS 
-                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
-                     </button>
-                     
-                     {/* Full-width dropdown - simplified list style */}
-                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
-                       <div className="max-w-screen mx-auto">
-                         <div className="w-full flex flex-col">
-                           {howItWorksItems.map((item, index) => (
-                             <a key={index} href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                               {item}
-                             </a>
-                           ))}
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                   
-                   {/* Company Dropdown */}
-                   <div className="static group">
-                     <button className="flex items-center text-sm md:text-sm font-semibold tracking-wide uppercase text-black-500 group-hover:text-black transition-colors">
-                       COMPANY 
-                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
-                     </button>
-                     
-                     {/* Full-width dropdown - simplified list style */}
-                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
-                       <div className="max-w-screen mx-auto">
-                         <div className="w-full flex flex-col">
-                           {companyItems.map((item, index) => (
-                             <a key={index} href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                               {item}
-                             </a>
-                           ))}
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                   
-                   {/* Legal Dropdown */}
-                   <div className="static group d-none">
-                     <button className="flex items-center text-2xl md:text-3xl font-semibold tracking-wide uppercase text-gray-500 group-hover:text-black transition-colors">
-                       LEGAL(3)
-                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
-                     </button>
-                     
-                     {/* Full-width dropdown - simplified list style */}
-                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
-                       <div className="max-w-screen mx-auto">
-                         <div className="w-full flex flex-col">
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Terms & Conditions
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Privacy Policy
-                           </a>
-                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
-                             Licensing
-                           </a>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                   
-                   {/* <a href='#' className="text-sm font-medium text-gray-500 hover:text-black transition-colors">CONTACT</a> */}
-                 </nav>
-               </div>
-                 
-                 {/* Support Button */}
-                 <button 
-                   // onClick={() => window.open('mailto:support@sourced.com', '_blank')}
-                   className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                   aria-label="Support"
-                   onClick={openChat}
-                   disabled={!isLoaded}
-                 >
-                   <Headset className="h-6 w-6 text-gray-700  rounded-full p-1" />
-                 </button>
-                 
-                 <InteractiveHoverButton className='uppercase md:hidden ml-4' onClick={() => setShowPopup(!showPopup)}>
-                   Menu
-                 </InteractiveHoverButton>
-                 {showPopup && (
-                   <div className="absolute right-0 mt-2 w-48 bg-[#EAE7E3] shadow-lg rounded-lg p-4 z-10">
-                     <p className="text-gray-700">More features coming soon!</p>
-                   </div>
-                 )}
-               </div>
-               </div>
-             </motion.header>}
+            {/* Shared Header with sticky behavior */}
+            <SharedHeader 
+              enableSticky={true}
+              onChatOpen={openChat}
+              isLoaded={isLoaded}
+            />
 
             {/* Hero Section */}
             <motion.section

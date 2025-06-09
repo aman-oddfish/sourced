@@ -33,7 +33,7 @@ export default function Header2() {
         </div>
 
         {/* Right Nav Items and Icon */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 bg-white/70 backdrop-blur-sm p-2">
           {/* Nav Items with opaque backgrounds */}
           <nav className="flex items-center space-x-3">
             <span className="bg-white/90 backdrop-blur-sm text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors cursor-pointer">
@@ -42,7 +42,7 @@ export default function Header2() {
             <span className="bg-white/90 backdrop-blur-sm text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors cursor-pointer">
               COMPANY
             </span>
-          </nav>
+        </nav>
           
           {/* Headphone Icon */}
           <div className="ml-2">

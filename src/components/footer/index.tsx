@@ -58,14 +58,14 @@ export const Footer: FC = () => {
     threshold: 0.3,
   });
 
-  // Use content management system
   const {
     subscriptionTitle,
     subscriptionSubtitle,
     copyrightText,
     instagramIcon,
     linkedinIcon,
-    brandName
+    footerColumns,
+    isLoading: contentLoading
   } = useContentManager();
 
   useEffect(() => {
@@ -75,8 +75,22 @@ export const Footer: FC = () => {
   }, [controls, inView]);
 
   // Split the text "Sourced" into letters for individual animation
-  const logoText = brandName || "SOURCED";
+  const logoText = "SOURCED";
   const logoLetters = logoText.split("");
+
+  if (contentLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // Parse footer columns
+  const parsedColumns = footerColumns.map(columnString => {
+    const [title, linksString] = columnString.split('|');
+    const links = linksString ? linksString.split(',').map(linkString => {
+      const [slug, displayName] = linkString.split(':');
+      return { slug: slug?.trim(), displayName: displayName?.trim() };
+    }) : [];
+    return { title: title?.trim(), links };
+  });
 
   return (
     <footer className="w-full bg-white mt-16 py-16 px-6 md:px-16 border-t border-gray-400">
@@ -100,76 +114,27 @@ export const Footer: FC = () => {
           </div>
         </div>
 
-        {/* RIGHT: Navigation Columns */}
+        {/* RIGHT: Dynamic Navigation Columns */}
         <div className="flex-[1.2] flex flex-wrap md:flex-nowrap gap-12 uppercase">
-          {/* ACCOUNT COLUMN */}
-          <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              Account
-            </h4>
-            <ul className="space-y-3 text-base text-black">
-              <li>
-                <a href="#" className="hover:font-medium">Login</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Join</a>
-              </li>
-            </ul>
-          </div>
-
-          {/* HOW IT WORKS COLUMN */}
-          <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              How It Works
-            </h4>
-            <ul className="space-y-3 text-base text-black">
-              <li>
-                <a href="#" className="hover:font-medium">Pricing</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Booking</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">For a Creator</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">For an Agency</a>
-              </li>
-            </ul>
-          </div>
-
-          {/* COMPANY COLUMN */}
-          <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              Company
-            </h4>
-            <ul className="space-y-3 text-base text-black">
-              <li>
-                <a href="#" className="hover:font-medium">About</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Contact</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Information</a>
-              </li>
-            </ul>
-          </div>
-
-          {/* LEGAL COLUMN */}
-          <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              Legal
-            </h4>
-            <ul className="space-y-3 text-base text-black">
-              <li>
-                <a href="#" className="hover:font-medium">Terms</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Privacy</a>
-              </li>
-            </ul>
-          </div>
+          {parsedColumns.map((column, index) => (
+            <div key={index} className="min-w-[140px]">
+              <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
+                {column.title}
+              </h4>
+              <ul className="space-y-3 text-base text-black">
+                {column.links.map((link, linkIndex) => (
+                  <li key={linkIndex}>
+                    <a 
+                      href={`/${link.slug}`} 
+                      className="hover:font-medium"
+                    >
+                      {link.displayName}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           {/* SOCIAL MEDIA COLUMN */}
           <div className="min-w-[140px]">
@@ -242,8 +207,8 @@ export const Footer: FC = () => {
       py-6 gap-6">
         <div>{copyrightText}</div>
         <div className="flex space-x-6">
-          <a href="#" className="hover:text-black transition-colors">Terms & Conditions</a>
-          <a href="#" className="hover:text-black transition-colors">Privacy Policy</a>
+          <a href="/terms" className="hover:text-black transition-colors">Terms & Conditions</a>
+          <a href="/privacy" className="hover:text-black transition-colors">Privacy Policy</a>
         </div>
         <div className="flex space-x-4">
       <a href="#" aria-label="Instagram" className="hover:opacity-75">
@@ -277,10 +242,7 @@ export const Footer: FC = () => {
             }
           }, 300);
         }}
-        async
-        charSet="UTF-8"
       />
- 
     </footer>
   );
 };
