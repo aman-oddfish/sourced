@@ -4,9 +4,10 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, HelpCircle, ArrowLeft, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { creativeRoles, photographerFields, videographerFields, type CreativeRole } from "@/components/signup/SignupFlow";
+import { basicDetailsFields, creativeRoles, finalPhotographerFields, finalVehiclesFields, finalVideographerFields, photographerFields, vehiclesFields, videographerFields, type CreativeRole } from "@/components/signup/SignupFlow";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Basic } from "next/font/google";
 
 type FormData = Record<string, string | File[] | null>;
 
@@ -58,25 +59,38 @@ export default function SignupPage() {
     }
   };
 
-  const handleRoleToggle = (role: CreativeRole) => {
-    if (selectedRoles.includes(role)) {
-      setSelectedRoles(selectedRoles.filter(r => r !== role));
-    } else {
-      setSelectedRoles([...selectedRoles, role]);
+const handleRoleToggle = (role: CreativeRole) => {
+  console.log("Toggling role:", role);
+  console.log("Selected roles before toggle:", selectedRoles);
+
+  if (selectedRoles.includes(role)) {
+    setSelectedRoles(selectedRoles.filter(r => r !== role));
+  } else {
+    const updatedRoles = [...selectedRoles, role];
+    if (!updatedRoles.includes("Basic Details")) {
+      updatedRoles.unshift("Basic Details");
     }
-  };
+    setSelectedRoles(updatedRoles);
+  }
+};
+
+
 
   const handleRoleConfirm = () => {
     if (selectedRoles.length > 0) {
       setCurrentRole(selectedRoles[0]); // Start with the first role
       setStep("questions");
     }
+   
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+ const handleInputChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+) => {
+  const { name, value } = e.target;
+  setFormData({ ...formData, [name]: value });
+};
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Handle file uploads
@@ -84,20 +98,53 @@ export default function SignupPage() {
     console.log("File selected:", files);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-    
-    // Show success message
-    alert("Thank you for submitting. Your profile is in review. We will email you if your application is successful / once it's public.");
-    
-    // Redirect to home page
-    router.push('/');
-  };
+const handleSubmit = async ( ) => {
+ 
+  
+  console.log("Form submitted:", formData);
+
+  try {
+    const response = await fetch("https://api.sheetbest.com/sheets/fed5974d-ea39-40fd-8504-8118e38d5718", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+
+    if (response.ok) {
+      console.log("✅ Form data submitted successfully");
+
+      alert(
+        "Thank you for submitting. Your profile is in review. We will email you if your application is successful / once it's public."
+      );
+
+      // Optional: reset form
+      // setFormData(initialFormData); // make sure you have this defined
+
+      // Optional: redirect after delay
+      // router.push('/');
+    } else {
+      console.error("❌ Failed to submit form data");
+      alert("There was a problem submitting your application. Please try again later.");
+    }
+  } catch (error) {
+    console.error("🚨 Error submitting data:", error);
+    alert("An error occurred. Please check your network and try again.");
+  }
+};
+
 
   const getFieldsForCurrentRole = () => {
-    if (currentRole === "Photographer") return photographerFields;
-    if (currentRole === "Videographer") return videographerFields;
+    if (currentRole === "Photographer") return finalPhotographerFields;
+    if (currentRole === "Videographer") return finalVideographerFields;
+    if (currentRole === "Vehicle") {
+      return  finalVehiclesFields
+
+    }
+    if (currentRole === "Basic Details") {
+      return  basicDetailsFields
+    }
     return [];
   };
 
@@ -109,12 +156,15 @@ export default function SignupPage() {
     } else {
       // All roles completed - just call handleSubmit directly
       console.log("Form submitted:", formData);
+      handleSubmit()
+      // Prepare data for submission
+      
       
       // Show success message
       alert("Thank you for submitting. Your profile is in review. We will email you if your application is successful / once it's public.");
       
       // Redirect to home page
-      router.push('/');
+     // router.push('/');
     }
   };
 
@@ -139,13 +189,13 @@ export default function SignupPage() {
           
           <div className="flex items-center">
             {/* Support Button */}
-            <button 
+            {/* <button 
               onClick={() => window.open('mailto:support@sourced.com', '_blank')}
               className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
               aria-label="Support"
             >
               <HelpCircle className="h-5 w-5 text-gray-700" />
-            </button>
+            </button> */}
             
             {step !== "userType" && (
               <button 
@@ -172,9 +222,9 @@ export default function SignupPage() {
                 exit="exit"
                 className="mt-8"
               >
-                <h1 className="text-3xl font-bold mb-6 text-center">Join Sourced</h1>
+                <h1 className="text-3xl font-bold mb-6 text-center">Join As</h1>
                 <p className="text-gray-600 mb-8 text-center max-w-md mx-auto">
-                  Connect with the best creatives and providers for your projects
+                  I Am...
                 </p>
                 
                 <div className="flex flex-col space-y-4 max-w-md mx-auto">
@@ -237,14 +287,14 @@ export default function SignupPage() {
                   
                 </div>
                 
-                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 justify-center mt-12">
+                {/* <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 justify-center mt-12">
                   <button className="px-5 py-2 text-center bg-black text-white text-sm rounded-full font-semibold tracking-wider flex items-center justify-center">
                     <span className="mr-2">Login with Instagram</span>
                   </button>
                   <button className="px-5 py-2 text-center bg-black text-white text-sm rounded-full font-semibold tracking-wider flex items-center justify-center">
                     <span className="mr-2">Login with Google</span>
                   </button>
-                </div>
+                </div> */}
               </motion.div>
             )}
 
@@ -259,14 +309,14 @@ export default function SignupPage() {
               >
                 <h1 className="text-3xl font-bold mb-6 text-center">I&apos;m a...</h1>
                 <p className="text-gray-600 mb-8 text-center max-w-md mx-auto">
-                  Select all that apply to you
+                  Check what  applies to you
                 </p>
                 
                 {/* Selected roles - pill tags */}
                 {selectedRoles.length > 0 && (
                   <div className="mb-6 flex flex-wrap gap-2 max-w-lg mx-auto">
                     {selectedRoles.map(role => (
-                      <div
+                      ( role != "Basic Details" && <div
                         key={role}
                         className="inline-flex items-center rounded-full py-1.5 px-3 bg-gray-100 gap-1 border border-gray-200"
                       >
@@ -278,7 +328,7 @@ export default function SignupPage() {
                         >
                           <X className="h-3 w-3" />
                         </button>
-                      </div>
+                      </div>)
                     ))}
                   </div>
                 )}
@@ -308,7 +358,7 @@ export default function SignupPage() {
                     <div
                       key={role}
                       className={`border-b border-gray-200 last:border-b-0 ${
-                        role !== "Photographer" && role !== "Videographer" ? "opacity-50" : ""
+                        role !== "Photographer" && role !== "Videographer" &&  role !== "Vehicle" ? "opacity-50" : ""
                       }`}
                     >
                       <button
@@ -316,7 +366,7 @@ export default function SignupPage() {
                         className={`w-full text-left py-3.5 px-4 flex items-center justify-between ${
                           selectedRoles.includes(role) ? "bg-black text-white" : "hover:bg-gray-50"
                         }`}
-                        disabled={role !== "Photographer" && role !== "Videographer"}
+                        disabled={role !== "Photographer" && role !== "Videographer" && role !== "Vehicle"}
                       >
                         <span className="text-base font-medium">{role}</span>
                         {selectedRoles.includes(role) && (
@@ -357,7 +407,9 @@ export default function SignupPage() {
                   
                   {/* Role tabs */}
                   <div className="flex mb-6 border-b border-gray-200">
+                   
                     {selectedRoles.map(role => (
+
                       <button
                         key={role}
                         className={`py-3 px-5 font-medium ${
@@ -413,7 +465,95 @@ export default function SignupPage() {
                                 />
                               </label>
                             </div>
-                          ) : (
+                          )
+                          :
+                          field.type === "select" ? (
+                            <select
+                              id={field.name}
+                              name={field.name}
+                              onChange={handleInputChange}
+                              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
+                            >
+                              {field.options?.map(option => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          )
+                          :
+                          field.type === "group" ? (
+                           <>
+                           {field?.fields?.map(subField => (
+                            <div key={subField.name} className="flex flex-col space-y-2">
+                                <label 
+                                  htmlFor={subField.name} 
+                                  className="block text-sm font-medium text-gray-700 uppercase tracking-wide"
+                                >
+                                  {subField.label} {subField.isOptional && <span className="text-gray-400">(Optional)</span>}
+                                </label>
+                                
+                                {subField.type === "textarea" ? (
+                                  <textarea
+                                    id={subField.name}
+                                    name={subField.name}
+                                    placeholder={subField.placeholder}
+                                    onChange={handleInputChange}
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
+                                  />
+                                ) : subField.type === "file" ? (
+                                  <div className="mt-1">
+                                    <label htmlFor={subField.name} className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <p className="mb-2 text-sm text-gray-500">
+                                          <span className="font-semibold">Click to upload</span> or drag and drop
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                          {subField.placeholder}
+                                        </p>
+                                      </div>
+                                      <input 
+                                        id={subField.name} 
+                                        name={subField.name}
+                                        type="file" 
+                                        multiple
+                                        className="hidden" 
+                                        onChange={handleFileChange} 
+                                      />
+                                    </label>
+                                  </div>
+                                )
+                                :
+                                subField.type === "select" ? (
+                                  <select
+                                    id={subField.name}
+                                    name={subField.name}
+                                    onChange={handleInputChange}
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
+                                  >
+                                    {subField.options?.map(option => (
+                                      <option key={option} value={option}>
+                                        {option}
+                                      </option>
+                                    ))}
+                                  </select>
+                                )
+                                :
+                                (
+                                  <input
+                                    id={subField.name}
+                                    name={subField.name}
+                                    type={subField.type}
+                                    placeholder={subField.placeholder}
+                                    onChange={handleInputChange}
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
+                                  />
+                                )}
+                              </div>
+                           ))}
+                           </>
+                          )
+                           : (
                             <input
                               id={field.name}
                               name={field.name}

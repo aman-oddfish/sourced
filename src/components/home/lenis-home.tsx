@@ -4,7 +4,7 @@
 import { ReactLenis, useLenis } from 'lenis/react';
 import { motion } from 'framer-motion';
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowDownLeft, Share2Icon, Twitter, Facebook, Linkedin, Copy, HelpCircle, Headset, ChevronDown, ArrowUpRight } from "lucide-react";
 import { VelocityScroll } from '../magicui/scroll-based-velocity';
 import { creato_display, GarmondI } from '../../../fonts';
@@ -87,6 +87,8 @@ export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
   const [showShareSuccess, setShowShareSuccess] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [showStickyHeader, setShowStickyHeader] = useState(false);
 
   const handleShare = async (platform: string) => {
     const shareUrl = window.location.href;
@@ -162,6 +164,34 @@ export default function Home() {
     }
   ];
 
+  useEffect(() => {
+    const checkTawk = setInterval(() => {
+      if (window.Tawk_API) {
+        setIsLoaded(true);
+        clearInterval(checkTawk);
+      }
+    }, 500);
+    return () => clearInterval(checkTawk);
+  }, []);
+
+  const openChat = () => {
+    if (window.Tawk_API) {
+      window.Tawk_API.showWidget();
+      window.Tawk_API.maximize();
+    }
+  };
+    
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickyHeader(window.scrollY > 100); // adjust scroll trigger
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+
   return (
     <ReactLenis root options={{ gestureOrientation: 'vertical', smoothWheel: !modalOpen, touchMultiplier: modalOpen ? 0 : 1 }}>
       <div className={`relative min-h-screen ${modalOpen ? 'pointer-events-none' : ''}`}>
@@ -175,12 +205,263 @@ export default function Home() {
           }}
         />
 
-        <main className={`bg-white text-black min-h-screen overflow-hidden ${creato_display.className}`} >
+        <main className={`bg-white text-black min-h-screen  ${creato_display.className}`} >
           <div className="max-w-screen mx-auto">
 
-            {/* Header */}
+            {/* Default Header */}
             
-            <Header2 />
+           {!showStickyHeader &&  <header
+               className="flex justify-between items-center py-6   md:px-12 px-4  z-50   fixed top-0 left-0 w-full backdrop-blur-md"
+                
+               
+             >
+               <h1 className="text-2xl md:text-3xl font-semibold tracking-wide uppercase">
+                 SOURCED
+               </h1>
+               
+               
+               
+               <div className="flex items-center space-x-4">
+               <div className="hidden md:flex items-center space-x-8">
+                 <nav className="bg-white bg-opacity-90 backdrop-blur-md rounded-md px-6 py-2 flex space-x-6">
+                   {/* How It Works Dropdown */}
+                   <div className="static group">
+                     <button className="flex items-center text-black-500 group-hover:text-black transition-colors text-sm md:text-sm font-semibold tracking-wide uppercase">
+                       HOW IT WORKS 
+                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                     </button>
+                     
+                     {/* Full-width dropdown - simplified list style */}
+                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                       <div className="max-w-screen mx-auto">
+                         <div className="w-full flex flex-col">
+                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             For Talent
+                           </a>
+                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             For Agents
+                           </a>
+                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Pricing
+                           </a>
+                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Security
+                           </a>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   
+                   {/* Company Dropdown */}
+                   <div className="static group">
+                     <button className="flex items-center text-sm md:text-sm font-semibold tracking-wide uppercase text-black-500 group-hover:text-black transition-colors">
+                       COMPANY 
+                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                     </button>
+                     
+                     {/* Full-width dropdown - simplified list style */}
+                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                       <div className="max-w-screen mx-auto">
+                         <div className="w-full flex flex-col">
+                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             About
+                           </a>
+                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Information
+                           </a>
+                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Team
+                           </a>
+                           <a href="#" className="w-full text-1xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Careers
+                           </a>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   
+                   {/* Legal Dropdown */}
+                   <div className="static group d-none">
+                     <button className="flex items-center text-2xl md:text-3xl font-semibold tracking-wide uppercase text-gray-500 group-hover:text-black transition-colors">
+                       LEGAL(3)
+                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                     </button>
+                     
+                     {/* Full-width dropdown - simplified list style */}
+                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                       <div className="max-w-screen mx-auto">
+                         <div className="w-full flex flex-col">
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Terms & Conditions
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Privacy Policy
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Licensing
+                           </a>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   
+                   {/* <a href='#' className="text-sm font-medium text-gray-500 hover:text-black transition-colors">CONTACT</a> */}
+                 </nav>
+               </div>
+                 
+                 {/* Support Button */}
+                 <button 
+                   // onClick={() => window.open('mailto:support@sourced.com', '_blank')}
+                   className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                   aria-label="Support"
+                   onClick={openChat}
+                   disabled={!isLoaded}
+                 >
+                   <Headset className="h-6 w-6 text-gray-700  rounded-full p-1" />
+                 </button>
+                 
+                 <InteractiveHoverButton className='uppercase md:hidden ml-4' onClick={() => setShowPopup(!showPopup)}>
+                   Menu
+                 </InteractiveHoverButton>
+                 {showPopup && (
+                   <div className="absolute right-0 mt-2 w-48 bg-[#EAE7E3] shadow-lg rounded-lg p-4 z-10">
+                     <p className="text-gray-700">More features coming soon!</p>
+                   </div>
+                 )}
+               </div>
+             </header>}
+
+             {/* Sticky Header */}
+            { showStickyHeader &&  <motion.header
+               className="flex justify-between items-center py-6   md:px-12 px-4  z-50   fixed top-0 left-0 w-full backdrop-blur-md"
+               
+               whileInView="visible"
+               variants={stickyRevealVariants}
+               viewport={{ once: true, amount: 0.2 }}
+               initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+             >
+               <div className='innerHeader flex items-center justify-between 
+               border-b border-black
+               pb-4 md:pb-4    
+               w-full'>
+                     <h1 className="text-2xl md:text-3xl font-semibold tracking-wide uppercase">
+                 O
+               </h1>
+               
+               
+               
+               <div className="flex items-center space-x-4">
+               <div className="hidden md:flex items-center space-x-8">
+                 <nav className="  bg-opacity-50 backdrop-blur-md   px-6 py-2 flex space-x-6">
+                   {/* How It Works Dropdown */}
+                   <div className="static group">
+                     <button className="flex items-center text-black-500 group-hover:text-black transition-colors text-sm md:text-sm font-semibold tracking-wide uppercase">
+                       HOW IT WORKS 
+                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                     </button>
+                     
+                     {/* Full-width dropdown - simplified list style */}
+                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                       <div className="max-w-screen mx-auto">
+                         <div className="w-full flex flex-col">
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             For Talent
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             For Agents
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Pricing
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Security
+                           </a>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   
+                   {/* Company Dropdown */}
+                   <div className="static group">
+                     <button className="flex items-center text-sm md:text-sm font-semibold tracking-wide uppercase text-black-500 group-hover:text-black transition-colors">
+                       COMPANY 
+                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                     </button>
+                     
+                     {/* Full-width dropdown - simplified list style */}
+                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                       <div className="max-w-screen mx-auto">
+                         <div className="w-full flex flex-col">
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             About
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Information
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Team
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Careers
+                           </a>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   
+                   {/* Legal Dropdown */}
+                   <div className="static group d-none">
+                     <button className="flex items-center text-2xl md:text-3xl font-semibold tracking-wide uppercase text-gray-500 group-hover:text-black transition-colors">
+                       LEGAL(3)
+                       {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                     </button>
+                     
+                     {/* Full-width dropdown - simplified list style */}
+                     <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                       <div className="max-w-screen mx-auto">
+                         <div className="w-full flex flex-col">
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Terms & Conditions
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Privacy Policy
+                           </a>
+                           <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                             Licensing
+                           </a>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   
+                   {/* <a href='#' className="text-sm font-medium text-gray-500 hover:text-black transition-colors">CONTACT</a> */}
+                 </nav>
+               </div>
+                 
+                 {/* Support Button */}
+                 <button 
+                   // onClick={() => window.open('mailto:support@sourced.com', '_blank')}
+                   className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                   aria-label="Support"
+                   onClick={openChat}
+                   disabled={!isLoaded}
+                 >
+                   <Headset className="h-6 w-6 text-gray-700  rounded-full p-1" />
+                 </button>
+                 
+                 <InteractiveHoverButton className='uppercase md:hidden ml-4' onClick={() => setShowPopup(!showPopup)}>
+                   Menu
+                 </InteractiveHoverButton>
+                 {showPopup && (
+                   <div className="absolute right-0 mt-2 w-48 bg-[#EAE7E3] shadow-lg rounded-lg p-4 z-10">
+                     <p className="text-gray-700">More features coming soon!</p>
+                   </div>
+                 )}
+               </div>
+               </div>
+             </motion.header>}
 
             {/* Hero Section */}
             <motion.section
@@ -217,26 +498,17 @@ export default function Home() {
                 <MorphingText
                   className='text-center uppercase tracking-wide text-white'
                   texts={["Photographer",
-  "Videographer",
-  "Director",
-  "Producer",
-  "Editor",
-  "Colorist",
-  "Audio Engineer",
-  "Gaffer",
-  "Grip",
-  "Hair Stylist",
-  "Makeup Artist",
-  "Wardrobe Stylist",
-  "Art Director",
-  "Set Designer",
-  "Prop Stylist",
-  "Location Scout",
-  "Model",
-  "Talent",
-  "Production Assistant",
-  "Digital Tech",
-  "Retoucher"]}
+                          "Videographer",
+                          "VEHICLE OWNER",
+                          "MODEL",
+                          "INFLUENCER",
+                          "ACTOR",
+                          "STYLIST",
+                          "HAIR STYLIST",
+                          "MAKEUP ARTIST",
+                          "EQUIPTMENT",
+                          "LOCATION",
+                          "OTHER"]}
                 />
                 <p className={`text-lg md:text-xl text-gray-500 -translate-y-5 ${GarmondI.className}`}>
                 Sourced simplifies creative connections
@@ -253,7 +525,7 @@ export default function Home() {
             {/* Why Sourced Section */}
             
             <motion.section
-              className="w-full py-12"
+              className="w-full py-12 pb-0"
               initial="hidden"
               whileInView="visible"
               variants={stickyRevealVariants}
@@ -297,20 +569,20 @@ export default function Home() {
               variants={stickyRevealVariants}
               viewport={{ once: true, amount: 0.2 }}
             >
-              <SignupFlow onOpenChange={setModalOpen} />
+              {/* <SignupFlow onOpenChange={setModalOpen} /> */}
               
               <Drawer>
                 <DrawerTrigger>
-                  <div className="group relative w-auto cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter">
+                  <div className="group relative w-auto cursor-pointer overflow-hidden rounded-full  p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter">
                     <div className="flex items-center justify-center text-center gap-2">
                       {/* <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:-translate-x-20 md:group-hover:-translate-x-10"></div> */}
-                      <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
-                        Share
+                      <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-black">
+                        <Share2Icon className="h-8 w-8"/>
                       </span>
                     </div>
-                    <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-primary-foreground opacity-0 transition-all duration-700 group-hover:-translate-x-6 group-hover:opacity-100">
-                      <span>Share </span>
-                      <Share2Icon className="h-4 w-4"/>
+                    <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-black opacity-0 transition-all duration-700 group-hover:-translate-x-6 group-hover:opacity-100">
+                      {/* <span>Share </span> */}
+                      <Share2Icon className="h-8 w-8"/>
                     </div>
                   </div>
                 </DrawerTrigger>

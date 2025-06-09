@@ -3,6 +3,8 @@ import { FC, useEffect } from "react";
 import { ArrowUpRight, PlusCircle } from "lucide-react";
 import { motion, useAnimation, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import Script from 'next/script';
+
 
 // Define animation variants for the Sourced text
 const logoVariants: Variants = {
@@ -213,13 +215,45 @@ export const Footer: FC = () => {
       </motion.div>
       
       {/* Copyright and Legal Links */}
-      <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center text-base text-gray-500 pb-6 gap-6">
+      <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center text-base text-gray-500
+      border-t border-black
+      py-6 gap-6">
         <div>© Sourced. 2025 All rights reserved.</div>
-        <div className="flex space-x-8">
+        <div className="flex space-x-6">
           <a href="#" className="hover:text-black transition-colors">Terms & Conditions</a>
           <a href="#" className="hover:text-black transition-colors">Privacy Policy</a>
         </div>
+        <div className="flex space-x-4">
+      <a href="#" aria-label="Instagram" className="hover:opacity-75">
+        <img src=" /insta.png" alt="Instagram" className="h-6 w-6" />
+      </a>
+      <a href="#" aria-label="LinkedIn" className="hover:opacity-75">
+        <img src=" /linkdin.png" alt="LinkedIn" className="h-6 w-6" />
+      </a>
+    </div>
       </div>
+
+     {/* Tawk.to script */}
+      <Script
+        strategy="afterInteractive"
+        src="https://embed.tawk.to/67cbecbd2c2717190f9e743f/1ilq99hcs"
+         onLoad={() => {
+          window.Tawk_API = window.Tawk_API || {};
+          window.Tawk_LoadStart = new Date();
+
+          // Wait for Tawk to be ready, then hide the widget
+          const waitForTawk = setInterval(() => {
+            if (window.Tawk_API?.hideWidget) {
+              window.Tawk_API.hideWidget();
+              clearInterval(waitForTawk);
+            }
+          }, 300);
+        }}
+        async
+        charSet="UTF-8"
+        crossOrigin="*"
+      />
+ 
     </footer>
   );
 };

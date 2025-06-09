@@ -6,7 +6,7 @@ import SignupFlow from "@/components/signup/SignupFlow";
 
 const WhySourcedSection = () => {
   return (
-    <section className="py-16 md:py-24 px-4 md:px-12">
+    <section className="py-16 md:py-24 px-4 md:px-12 ">
       <div className="max-w-5xl mx-auto">
         {/* Section Header */}
         <div className="mb-12">
@@ -32,17 +32,19 @@ const WhySourcedSection = () => {
         {/* Simple Accordion Sections */}
         <div className="w-full">
           {/* Talent Accordion Item */}
-          <div className="border-t border-b border-gray-200 py-4">
-            <details className="group">
+          <div className="   p-4 pr-10 rounded-3xl bg-gray-100">
+            <details className="group" open>
               <summary className="flex items-center justify-between cursor-pointer list-none">
                 <div className="flex items-center">
                   <Users className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
                   <span className="text-xl md:text-2xl font-semibold">Find and Shortlist Talent</span>
                 </div>
-                <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+                {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
+                <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+
               </summary>
-              <div className="pl-12 pt-4 text-base">
-                <p className="text-gray-600">
+              <div className="  pt-4 text-base">
+                <p className="text-gray-600 pl-[50px] md:pl-[300px]   text-xl md:text-2xl font-thin">
                   Discover a curated network of top creative professionals. Browse portfolios, 
                   filter by specialization, and easily shortlist the perfect collaborators 
                   for your project needs.
@@ -52,17 +54,18 @@ const WhySourcedSection = () => {
           </div>
 
           {/* Job Accordion Item */}
-          <div className="border-b border-gray-200 py-4">
+          <div className="   p-4 pr-10 rounded-3xl bg-gray-100 mt-6">
             <details className="group">
               <summary className="flex items-center justify-between cursor-pointer list-none">
                 <div className="flex items-center">
                   <FileText className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
                   <span className="text-xl md:text-2xl font-semibold">Post Your Job in Minutes</span>
                 </div>
-                <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+                {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
+                <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
               </summary>
-              <div className="pl-12 pt-4 text-base">
-                <p className="text-gray-600">
+              <div className=" pt-4 text-base">
+                      <p className="text-gray-600 pl-[50px] md:pl-[300px]   text-xl md:text-2xl font-thin">
                   Create detailed job postings in just a few clicks. Specify your project requirements, 
                   timeline, and budget, then share it with our network of talented professionals.
                 </p>
@@ -71,14 +74,16 @@ const WhySourcedSection = () => {
           </div>
 
           {/* Booking Accordion Item */}
-          <div className="border-b border-gray-200 py-4">
+          <div className="border-b border-gray-200 py-4 d-none ">
             <details className="group">
               <summary className="flex items-center justify-between cursor-pointer list-none">
                 <div className="flex items-center">
                   <Calendar className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
                   <span className="text-xl md:text-2xl font-semibold">Book and Manage Seamlessly</span>
                 </div>
-                <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+                {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
+                <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+
               </summary>
               <div className="pl-12 pt-4 text-base">
                 <p className="text-gray-600">
@@ -91,14 +96,16 @@ const WhySourcedSection = () => {
           </div>
 
           {/* Payment Accordion Item */}
-          <div className="border-b border-gray-200 py-4">
+          <div className="border-b border-gray-200 py-4 d-none ">
             <details className="group">
               <summary className="flex items-center justify-between cursor-pointer list-none">
                 <div className="flex items-center">
                   <CreditCard className="h-8 w-8 mr-4 text-gray-400 flex-shrink-0" />
                   <span className="text-xl md:text-2xl font-semibold">Payment Made Simple</span>
                 </div>
-                <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+                {/* <ChevronDown className="h-8 w-8 shrink-0 text-gray-400 transition-transform group-open:rotate-180" /> */}
+                <img src="/arrow2.svg" alt="Chevron Down" className=" h-6 w-10  shrink-0 text-gray-400 transition-transform group-open:rotate-180" />
+
               </summary>
               <div className="pl-12 pt-4 text-base">
                 <p className="text-gray-600">
